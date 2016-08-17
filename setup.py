@@ -40,6 +40,6 @@ setup(
     ]},
     entry_points="""
     [rasterio.rio_plugins]
-    islossy=rio_alpha.scripts.cli:islossy
+    alpha=rio_alpha.scripts.cli:alpha
     """
 )
