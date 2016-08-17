@@ -33,11 +33,12 @@ setup(
     zip_safe=False,
     install_requires=[
         'click',
-        'rasterio',
-        'rio-mucho',
         'numpy',
         'rasterio',
+        'rasterio',
+        'rio-mucho',
         'scikit-image'
+        'scipy'
     ],
     extras_require={'test': [
         'codecov',
