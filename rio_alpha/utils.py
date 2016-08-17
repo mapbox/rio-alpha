@@ -1,10 +1,13 @@
-import re, json
+import re
+import json
+
 
 def _parse_single(n):
     try:
         return float(n)
-    except ValueError as err:
+    except ValueError:
         raise ValueError('{0} is not a valid nodata value'.format(n))
+
 
 def _parse_ndv(ndv, bands):
     if re.match(r'\[[0-9\.\,\s]+\]', ndv):

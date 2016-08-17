@@ -1,8 +1,8 @@
 import click
-import json
 import rasterio as rio
 
 from rio_alpha.islossy import count_ndv_regions
+from rio_alpha.utils import _parse_ndv
 
 
 @click.command('islossy')
@@ -15,7 +15,7 @@ def islossy(input, ndv):
     with rio.open(input, "r") as src:
         rgb = src.read()
 
-    ndv = json.loads(ndv)
+    ndv = _parse_ndv(ndv, 3)
 
     if count_ndv_regions(ndv, rgb) >= 10:
         click.echo("--lossy lossy")
