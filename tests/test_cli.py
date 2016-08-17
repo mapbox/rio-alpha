@@ -5,13 +5,17 @@ from click.testing import CliRunner
 from rio_alpha.scripts.cli import islossy
 
 
-def test_cli_empty_files():
-    pass
-    # test_cmd 0 0 0 empty.tif "Could not open file"
-    # test_cmd 0 0 0 prep/13-3032-4670-test-2014-unhappy.tif "Could not open file"
+def test_cli_expected_failures():
+    runner = CliRunner()
+
+    result = runner.invoke(islossy, [
+        'tests/fixtures/dne.tif'
+    ])
+    assert result.exit_code == 2
+    assert 'Invalid value for "input"' in result.output
 
 
-def test_cli_expected_outputs():
+def test_cli_expected_successes():
     runner = CliRunner()
 
     result = runner.invoke(islossy, [
@@ -69,3 +73,5 @@ def test_cli_expected_outputs():
     ])
     assert result.exit_code == 0
     assert result.output.strip('\n') == "--lossy lossy"
+
+

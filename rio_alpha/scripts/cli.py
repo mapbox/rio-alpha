@@ -6,7 +6,7 @@ from rio_alpha.islossy import check
 
 
 @click.command('islossy')
-@click.argument('input', nargs=1, required=True)
+@click.argument('input', nargs=1, type=click.Path(exists=True))
 @click.option('--ndv', default='[0, 0, 0]')
 def islossy(input, ndv):
     """
