@@ -1,6 +1,4 @@
-import click
 import numpy as np
-import skimage
 from skimage import measure
 
 
@@ -18,7 +16,7 @@ def count_ndv_regions(ndv, rgb):
 
     img = _label(ndv, rgb)
 
-    _, n_labels = skimage.measure.label(
+    _, n_labels = measure.label(
         img,
         background=255,
         neighbors=4,
