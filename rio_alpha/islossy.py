@@ -19,17 +19,29 @@ def _mask_exact(img, ndv):
     '''
     depth, _, _ = img.shape
     nd = np.iinfo(img.dtype).max
+    alpha = np.invert(np.all(np.rollaxis(img, 0, depth) == (ndv), axis=2)).astype(img.dtype) * nd
 
-    return np.invert(np.all(np.rollaxis(img, 0, depth) == (ndv), axis=2)).astype(img.dtype) * nd
+    return alpha
 
 
-def count_ndv_regions(ndv, rgb):
-    """
-    Discover unique labels to count ndv regions.
-    """
+def count_ndv_regions(ndv, img):
+    '''Discover unique labels to count ndv regions.
+
+    Parameters
+    ----------
+    ndv: list
+        a list of floats whose length = band count
+    img: ndarray
+        (depth x rows x cols) array
+
+    Returns
+    -------
+    n_labels: int
+        an integer equal to the number of connected regions
+    '''
     np.set_printoptions(threshold=np.nan)
 
-    img = _mask_exact(ndv, rgb)
+    img = _mask_exact(ndv, img)
 
     _, n_labels = measure.label(
         img,
