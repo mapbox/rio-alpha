@@ -1,0 +1,21 @@
+machine:
+    python:
+        version: 2.7.11
+
+dependencies:
+    pre:
+        - sudo add-apt-repository -y ppa:ubuntugis/ppa
+        - sudo apt-get update
+        - sudo apt-get -y --no-install-recommends --force-yes install python-numpy libgdal1h gdal-bin libgdal-dev
+
+    override:
+        - pip install -U pip
+        - pip install -e ".[test]"
+
+test:
+    override:
+        - py.test --cov rio_alpha --cov-report term-missing --ignore=venv
+    post:
+        - codecov -t fafd9057-c3d3-4e5c-97e0-647c4dca3ae2
+        - codecov
+
