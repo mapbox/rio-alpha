@@ -14,36 +14,36 @@ from os.path import isfile
 
 
 def determine_nodata(src_path, user_nodata):
-"""returns a 2D array with a GDAL-style mask determined by
-the following criteria, in order of precedence:
+    """returns a 2D array with a GDAL-style mask determined by
+    the following criteria, in order of precedence:
 
-1. If a .msk file, dataset-wide alpha or internal mask exists,
-   it will be used as the dataset mask.
-2. If a 4-band RGBA with a shadow nodata value,
-   band 4 will be used as the dataset mask.
-3. If a nodata value exists, use the binary OR (|) of the band masks
-4. If no nodata value exists, return a mask filled with all valid data (255)
-5. User supplies the nodata value, input a single value or
-   a list of per-band values. Default is None.
+    1. If a .msk file, dataset-wide alpha or internal mask exists,
+       it will be used as the dataset mask.
+    2. If a 4-band RGBA with a shadow nodata value,
+       band 4 will be used as the dataset mask.
+    3. If a nodata value exists, use the binary OR (|) of the band masks
+    4. If no nodata value exists, return a mask filled with all valid data (255)
+    5. User supplies the nodata value, input a single value or
+       a list of per-band values. Default is None.
 
-Parameters
-----------
-src_path: string
-user_nodata: single value (int|float) or list of per-band values.
-             [Default: None]
+    Parameters
+    ----------
+    src_path: string
+    user_nodata: single value (int|float) or list of per-band values.
+                 [Default: None]
 
-Returns
--------
-alpha: ndarray, 2D with shape == (2, height, width)
+    Returns
+    -------
+    alpha: ndarray, 2D with shape == (2, height, width)
 
-"""
-    with rio.open(src_path) as src:
-        if user_nodata:
-            alpha = get_alpha_mask(..., nodata=user_nodata)
-        else:
-            alpha = src.dataset_mask()
+    """
+    # with rio.open(src_path) as src:
+    #     if user_nodata:
+    #         alpha = get_alpha_mask(...., nodata=user_nodata)
+    #     else:
+    #         alpha = src.dataset_mask()
 
-    return alpha
+    # return alpha
 
 
 
