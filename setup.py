@@ -31,15 +31,7 @@ setup(
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
     include_package_date=True,
     zip_safe=False,
-    install_requires=[
-        'click',
-        'numpy',
-        'rasterio',
-        'rasterio',
-        'rio-mucho',
-        'scikit-image'
-        'scipy'
-    ],
+    install_requires=read('requirements.txt').splitlines(),
     extras_require={'test': [
         'codecov',
         'hypothesis',
