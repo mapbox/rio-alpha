@@ -14,10 +14,13 @@ def alpha():
 
 @click.command('islossy')
 @click.argument('input', nargs=1, type=click.Path(exists=True))
-@click.option('--ndv', default='[0, 0, 0]')
+@click.option('--ndv', default='[0, 0, 0]',
+              help='Expects an integer or a len(list) == 3 representing a nodata value')
 def islossy(input, ndv):
     """
-    Find nodata in input image
+    Determine if there are >= 10 nodata regions in an image
+
+    If true, returns the string `--lossy lossy`.
     """
     with rio.open(input, "r") as src:
         img = src.read()
