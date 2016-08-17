@@ -22,6 +22,17 @@ def test_lossy_single_value_ndv():
     assert result.output.strip('\n') == "--lossy lossy"
 
 
+def test_lossy_single_value_ndv_fail():
+    runner = CliRunner()
+
+    result = runner.invoke(islossy, [
+        'tests/fixtures/ca_chilliwack/2012_30cm_594_5450.tiny.tif',
+        '--ndv', 'ndv'
+    ])
+
+    assert result.exit_code != 0
+
+
 def test_lossy_three_value_ndv():
     runner = CliRunner()
 
@@ -47,6 +58,17 @@ def test_lossy_three_value_ndv():
     assert result.output.strip('\n') == "--lossy lossy"
 
 
+def test_lossy_three_value_ndv_fail():
+    runner = CliRunner()
+
+    result = runner.invoke(islossy, [
+        'tests/fixtures/ca_chilliwack/2012_30cm_594_5450.tiny.tif',
+        '--ndv', '[255, 255, \'ndv\']'
+    ])
+
+    assert result.exit_code != 0
+
+
 def test_notlossy_single_value_ndv():
     result = CliRunner().invoke(islossy, [
         'tests/fixtures/ca_chilliwack/2012_30cm_592_5452.tiny.tif',
@@ -56,7 +78,7 @@ def test_notlossy_single_value_ndv():
     assert result.output.strip('\n') == ""
 
 
-def test_notlossy_three_value_ndv():
+def test_notlossy_diff_three_value_ndv():
     runner = CliRunner()
 
     result = runner.invoke(islossy, [
@@ -66,6 +88,9 @@ def test_notlossy_three_value_ndv():
     assert result.exit_code == 0
     assert result.output.strip('\n') == ""
 
+
+def test_nolossy_same_three_value_ndv():
+    runner = CliRunner()
     result = runner.invoke(islossy, [
         'tests/fixtures/ca_chilliwack/2012_30cm_592_5452.tiny.tif',
         '--ndv', '[255, 255, 255]'
