@@ -13,11 +13,11 @@ def islossy(input, ndv):
     Find nodata in input image
     """
     with rio.open(input, "r") as src:
-        rgb = src.read()
+        img = src.read()
 
     ndv = _parse_ndv(ndv, 3)
 
-    if count_ndv_regions(ndv, rgb) >= 10:
+    if count_ndv_regions(img, ndv) >= 10:
         click.echo("--lossy lossy")
     else:
         click.echo("")

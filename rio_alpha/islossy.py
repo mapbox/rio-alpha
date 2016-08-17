@@ -2,10 +2,25 @@ import numpy as np
 from skimage import measure
 
 
-def _label(ndv, rgb):
-    """
-    """
-    return np.invert(np.all(np.rollaxis(rgb, 0, 3) == (ndv), axis=2)).astype(rgb.dtype) * np.iinfo(rgb.dtype).max
+def _mask_exact(img, ndv):
+    '''Exact nodata masking based on ndv
+
+    Parameters
+    -----------
+    img: ndarray
+        (depth x rows x cols) array
+    ndv: (list|tuple|ndarray)
+        list of notdata values where len == img depth
+
+    Returns
+    --------
+    alpha: ndarray
+        ndarray mask of shape (rows, cols) where opaque == 0 and transparent == max of dtype
+    '''
+    depth, _, _ = img.shape
+    nd = np.iinfo(img.dtype).max
+
+    return np.invert(np.all(np.rollaxis(img, 0, depth) == (ndv), axis=2)).astype(img.dtype) * nd
 
 
 def count_ndv_regions(ndv, rgb):
@@ -14,7 +29,7 @@ def count_ndv_regions(ndv, rgb):
     """
     np.set_printoptions(threshold=np.nan)
 
-    img = _label(ndv, rgb)
+    img = _mask_exact(ndv, rgb)
 
     _, n_labels = measure.label(
         img,
