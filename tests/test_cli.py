@@ -5,7 +5,7 @@ from click.testing import CliRunner
 from rio_alpha.scripts.cli import islossy
 
 
-def test_cli_usage():
+def test_cli_missing_input():
     result = CliRunner().invoke(islossy, [
         'tests/fixtures/dne.tif'
     ])
