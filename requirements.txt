@@ -1,0 +1,6 @@
+click
+rasterio
+numpy
+rio-mucho
+scikit-image
+scipy
