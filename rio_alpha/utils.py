@@ -104,5 +104,5 @@ def _debug_mode(rgb_flat, candidate_original, candidate_continuous):
     plt.show()
     plt.hist(a, bins=range(256)) #histogram of continuous values only
     plt.show()
-    click,echo('Original image ndv candidate: %s' %(str(candidate_original))
-    click.echo('Filtered image ndv candidate: %s' %(str(candidate_continuous))
+    click,echo('Original image ndv candidate: %s' %(str(candidate_original)))
+    click.echo('Filtered image ndv candidate: %s' %(str(candidate_continuous)))
