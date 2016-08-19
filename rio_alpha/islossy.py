@@ -1,20 +1,25 @@
 import numpy as np
 from skimage import measure
 
-
-def _label(ndv, rgb):
-    """
-    """
-    return np.invert(np.all(np.rollaxis(rgb, 0, 3) == (ndv), axis=2)).astype(rgb.dtype) * np.iinfo(rgb.dtype).max
+from rio_alpha.alpha_mask import mask_exact
 
 
-def count_ndv_regions(ndv, rgb):
-    """
-    Discover unique labels to count ndv regions.
-    """
+def count_ndv_regions(img, ndv):
+    '''Discover unique labels to count ndv regions.
+    Parameters
+    ----------
+    ndv: list
+        a list of floats whose length = band count
+    img: ndarray
+        (depth x rows x cols) array
+    Returns
+    -------
+    n_labels: int
+        an integer equal to the number of connected regions
+    '''
     np.set_printoptions(threshold=np.nan)
 
-    img = _label(ndv, rgb)
+    img = mask_exact(img, ndv)
 
     _, n_labels = measure.label(
         img,
@@ -24,3 +29,4 @@ def count_ndv_regions(ndv, rgb):
     )
 
     return n_labels
+

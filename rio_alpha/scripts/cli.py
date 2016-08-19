@@ -10,24 +10,25 @@ logger = logging.getLogger('rio_alpha')
 
 @click.group('alpha')
 def alpha():
-    """Add alpha band to imagery based on nodata values,
-        Find nodata in input image.
-    """
+    '''Nodata utilities
+    '''
     pass
 
 @click.command('islossy')
 @click.argument('input', nargs=1, type=click.Path(exists=True))
-@click.option('--ndv', default=[0, 0, 0])
+@click.option('--ndv', default='[0, 0, 0]',
+              help='Expects an integer or a len(list) == 3 representing a nodata value')
 def islossy(input, ndv):
     """
-    Find nodata in input image
+    Determine if there are >= 10 nodata regions in an image
+    If true, returns the string `--lossy lossy`.
     """
     with rio.open(input, "r") as src:
-        rgb = src.read()
+        img = src.read()
 
     ndv = _parse_ndv(ndv, 3)
 
-    if count_ndv_regions(ndv, rgb) >= 10:
+    if count_ndv_regions(img, ndv) >= 10:
         click.echo("--lossy lossy")
     else:
         click.echo("")

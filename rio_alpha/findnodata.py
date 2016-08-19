@@ -67,11 +67,11 @@ def discover_ndv(rgb_orig, debug):
 
         else:
             if debug:
-                click.eho('None')
+                return "None"
             else:
-                click.echo('')
+                return ""
     else:
-        click.echo('Invalid %s ' % (str(candidate_list)))
+        return 'Invalid %s ' % (str(candidate_list))
 
 
 
