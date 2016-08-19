@@ -41,5 +41,6 @@ setup(
     entry_points="""
     [rasterio.rio_plugins]
     islossy=rio_alpha.scripts.cli:islossy
+    findnodata=rio_alpha.scripts.cli:findnodata
     """
 )

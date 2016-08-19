@@ -1,5 +1,8 @@
 import re
 import json
+import numpy as np
+from scipy.stats import itemfreq
+from scipy.stats import mode
 
 
 def _parse_single(n):
@@ -78,18 +81,44 @@ def _find_continuous_rgb(input_array, axis_num):
 
 # Find modal RGB value of continuous values array (val_list), takes list, returns [R,G,B]
 def _group(lst, n, continuous):
-    a = np.asarray(zip(*[lst[i::n] for i in range(n)]))
-    mode_vals = stats.mode(a)
-    for i in range(3):
-        candidate_modal = int((mode_vals[0])[0,i])
-        continuous.append(candidate_modal)
-    return continuous
+    arr = np.asarray(zip(*[lst[i::n] for i in range(n)]))
+    mode_vals = mode(arr)
+    continuous = [int((mode_vals[0])[0,i]) for i in range(3)]
+
+    return continuous, arr
 
 
-def _compute_continous(rgb_mod, loc):
-    val_lst = _find_continuous_rgb(rgb_mod, loc) # IDs location of continuousvalues, returns "val_list"
+def _compute_continuous(rgb_mod, loc):
     cont_lst= []
-    return _group(val_list, 3, cont_lst) # Converts continuous indexes back to RGB values
+    return _group(_find_continuous_rgb(rgb_mod, loc),
+                  3,
+                  cont_lst)
+
+
+def search_image_edge(rgb_mod, arr, candidate_original, candidate_continuous):
+    # Make array of image edge
+    top_row = rgb_mod[0, :, :]
+    bottom_row = rgb_mod[-1, :, :]
+    first_col = rgb_mod[:, 0, :]
+    last_col = rgb_mod[:, -1, :]
+    img_edge = np.concatenate(
+                    (top_row,last_col, bottom_row, first_col),
+                    axis=0
+                )
+
+    # Squish image edge down to just continuous values 
+    edge_mode_continuous = _compute_continuous(rgb_mod, 0)
+
+     # Count nodata value frequency in full image edge & squished image edge
+    count_img_edge_full = \
+        [len(np.transpose(np.where((img_edge == candidate).all(axis = 1))) 
+                for candidate in (candidate_original, candidate_continuous))]   
+
+    count_img_edge_continuous = \
+        [len(np.transpose(np.where((a == candidate).all(axis = 1)))
+                for candidate in (candidate_original, candidate_continuous))]
+
+    return count_img_edge_full, count_img_edge_continuous
 
 
 def _mode_response(text, winner):

@@ -35,22 +35,24 @@ def islossy(input, ndv):
 
 @click.command('findnodata')
 @click.argument('src_path', type=click.Path(exists=True))
-@click.option('--user_nodata', '-u', default=None,
+@click.option('--user_nodata', '-u',
+              default=None,
               help="User supplies the nodata value, "
               "input a single value or a list of per-band values.")
-@click.option('--debug', help="Enables matplotlib & printing of figures")
-@click.option('--verbose', '-v',
+@click.option('--debug', is_flag=True,
+              default=False,
+              help="Enables matplotlib & printing of figures")
+@click.option('--verbose', '-v', is_flag=True,
+              default=False,
               help="Prints extra information, "
               "like competing candidate values")
-@click.option('--discovery', default=None,
+@click.option('--discovery', is_flag=True,
+              default=False,
               help="Prints extra information, "
               "like competing candidate values")
 def findnodata(src_path, user_nodata, debug, verbose, discovery):
-    # if not isfile(src_path):
-    #   click.echo("Could not open file")
-    #   pass
-
-    determine_nodata(src_path, user_nodata, discovery)
+    ndv = determine_nodata(src_path, user_nodata, discovery)
+    click.echo("%s" % ndv)
 
 
 alpha.add_command(islossy)
