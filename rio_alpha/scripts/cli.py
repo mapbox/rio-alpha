@@ -18,8 +18,7 @@ def alpha():
 
 @click.command('islossy')
 @click.argument('input', nargs=1, type=click.Path(exists=True))
-@click.option('--ndv', default='[0, 0, 0]',
-              help='Expects an integer or a len(list) == 3 representing a nodata value')
+@click.option('--ndv', default=0)
 def islossy(input, ndv):
     """
     Determine if there are >= 10 nodata regions in an image
@@ -50,23 +49,11 @@ def islossy(input, ndv):
               help="Prints extra information, "
               "like competing candidate values")
 def findnodata(src_path, user_nodata, debug, verbose, discovery):
-    determine_nodata(src_path, user_nodata)
+    if not isfile(src_path):
+      click.echo("Could not open file")
+      pass
 
-# with rio.drivers():
-#   with rio.open(args.infile, "r") as src:
-#     count = src.count
-
-# if ( count == 4 ):
-#     print "alpha"
-# else:
-#     nodata = src.nodata
-#     if ( nodata == None ):
-#         if discovery:
-#             discover_ndv()
-#         else:
-#             print ""
-#     else:
-#         print str(int(nodata)) + " " + str(int(nodata)) + " " + str(int(nodata))
+    determine_nodata(src_path, user_nodata, discovery)
 
 
 alpha.add_command(islossy)
