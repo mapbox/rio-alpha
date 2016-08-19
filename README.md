@@ -1,8 +1,7 @@
 
 rio-alpha
 =========
-
-[![CircleCI](https://circleci.com/gh/mapbox/rio-alpha/tree/master.svg?style=shield&circle)](https://circleci.com/gh/mapbox/rio-alpha) [![codecov](https://codecov.io/gh/mapbox/rio-alpha/branch/master/graph/badge.svg?token=jgKj1UPcpd)](https://codecov.io/gh/mapbox/rio-alpha)
+[![CircleCI](https://circleci.com/gh/mapbox/rio-alpha/tree/master.svg?style=shield&circle-token=e0e2f1cae4332f0c85e0007d7b8c1b4d02dc0e17)](https://circleci.com/gh/mapbox/rio-alpha) [![codecov](https://codecov.io/gh/mapbox/rio-alpha/branch/master/graph/badge.svg?token=jgKj1UPcpd)](https://codecov.io/gh/mapbox/rio-alpha)
 
 A [rasterio](https://github.com/mapbox/rasterio) plugin for working with nodata. Provides a cli and python modules.
 
