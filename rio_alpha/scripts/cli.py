@@ -4,6 +4,7 @@ import rasterio as rio
 from rio_alpha.utils import _parse_ndv
 from rio_alpha.islossy import count_ndv_regions
 from rio_alpha.findnodata import determine_nodata
+from os.path import isfile
 
 logger = logging.getLogger('rio_alpha')
 
@@ -16,7 +17,7 @@ def alpha():
 
 @click.command('islossy')
 @click.argument('input', nargs=1, type=click.Path(exists=True))
-@click.option('--ndv', default=0)
+@click.option('--ndv', default=[0, 0, 0])
 def islossy(input, ndv):
     """
     Find nodata in input image
@@ -45,9 +46,9 @@ def islossy(input, ndv):
               help="Prints extra information, "
               "like competing candidate values")
 def findnodata(src_path, user_nodata, debug, verbose, discovery):
-    if not isfile(src_path):
-      click.echo("Could not open file")
-      pass
+    # if not isfile(src_path):
+    #   click.echo("Could not open file")
+    #   pass
 
     determine_nodata(src_path, user_nodata, discovery)
 

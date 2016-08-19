@@ -52,14 +52,13 @@ def discover_ndv(rgb_orig, debug):
         bottom_row = rgb_mod[-1,:,:]
         first_col = rgb_mod[:,0,:]
         last_col = rgb_mod[:,-1,:]
-        img_edge = np.concatenate
-                    (
+        img_edge = np.concatenate(
                         (top_row,last_col, bottom_row, first_col),
                         axis=0
                     )
 
         # Squish image edge down to just continuous values 
-            edge_mode_continuous = _compute_continuous(rgb_mod, 0)
+        edge_mode_continuous = _compute_continuous(rgb_mod, 0)
 
         # Empty lists for full image edge & squished image edge frequency count
         count_img_edge_full = []
@@ -154,4 +153,6 @@ def determine_nodata(src_path, debug, discovery):
         else:
             click.echo('%s %s %s' % (str(int(nodata)),
                                      str(int(nodata)),
-                                     str(int(nodata)))
+                                     str(int(nodata))))
+
+
