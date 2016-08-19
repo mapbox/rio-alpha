@@ -1,6 +1,5 @@
 import click
 import pytest
-import logging
 from click.testing import CliRunner
 
 from rio_alpha.scripts.cli import islossy

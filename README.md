@@ -41,4 +41,3 @@ Options:
 ```
 
 This is a direct replacement for the `pxm-islossy` function in  [pxm](https://github.com/mapbox/pxm/blob/88f147e91bfaad84f4e1777fc4be4cf9dec1d294/pxm-islossy).
-
