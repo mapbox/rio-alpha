@@ -138,7 +138,6 @@ def test_findnodata_debug_success():
         'tests/fixtures/fi_all/W4441A.tiny.tif', 
         '--discovery', '--debug'])
     assert result.exit_code == 0
-    assert result.output.strip('\n') == \
-        'Original image ndv candidate: [255, 255, 255]\n' \
+    assert 'Original image ndv candidate: [255, 255, 255]\n' \
         'Filtered image ndv candidate: [255, 255, 255]\n' \
-        '255 255 255'
+        '255 255 255' in result.output
