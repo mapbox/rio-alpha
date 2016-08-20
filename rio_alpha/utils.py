@@ -3,6 +3,7 @@ import json
 import numpy as np
 from scipy.stats import itemfreq
 from scipy.stats import mode
+import math
 
 
 def _parse_single(n):
@@ -60,7 +61,7 @@ def _convert_rgb(rgb_orig):
     if rgb_orig[:, :, 0].shape[min_dimension] < 200:
         mod = 1
     else:
-        mod = math.ceil(rgb_orig[:, :, 0].shape[min_dimension] / 200)
+        mod = int(math.ceil(rgb_orig[:, :, 0].shape[min_dimension] / 200))
 
     rgb_mod = rgb_orig[::mod, ::mod]
     # Flatten image for full img histogram
@@ -74,7 +75,7 @@ def _convert_rgb(rgb_orig):
 # Squish array to only continuous values, return is in list form
 def _find_continuous_rgb(input_array, axis_num):
     diff_array = np.diff(input_array, axis=int(axis_num))
-    diff_array = np.insert(diff_array,0,[99, 99, 99], axis=int(axis_num))
+    diff_array = np.insert(diff_array, 0,[99, 99, 99], axis=int(axis_num))
     val_list = (input_array[diff_array == [0, 0, 0]]).tolist()
     return val_list
 
@@ -83,8 +84,7 @@ def _find_continuous_rgb(input_array, axis_num):
 def _group(lst, n, continuous):
     arr = np.asarray(zip(*[lst[i::n] for i in range(n)]))
     mode_vals = mode(arr)
-    continuous = [int((mode_vals[0])[0,i]) for i in range(3)]
-
+    continuous = [int((mode_vals[0])[0, i]) for i in range(3)]
     return continuous, arr
 
 
@@ -95,7 +95,7 @@ def _compute_continuous(rgb_mod, loc):
                   cont_lst)
 
 
-def search_image_edge(rgb_mod, arr, candidate_original, candidate_continuous):
+def _search_image_edge(rgb_mod, candidate_original, candidate_continuous):
     # Make array of image edge
     top_row = rgb_mod[0, :, :]
     bottom_row = rgb_mod[-1, :, :]
@@ -107,31 +107,41 @@ def search_image_edge(rgb_mod, arr, candidate_original, candidate_continuous):
                 )
 
     # Squish image edge down to just continuous values 
-    edge_mode_continuous = _compute_continuous(rgb_mod, 0)
+    edge_mode_continuous, arr = _compute_continuous(rgb_mod, 0)
 
      # Count nodata value frequency in full image edge & squished image edge
     count_img_edge_full = \
-        [len(np.transpose(np.where((img_edge == candidate).all(axis = 1))) 
-                for candidate in (candidate_original, candidate_continuous))]   
+        [len(np.transpose(np.where((img_edge == candidate).all(axis=1))))
+            for candidate in (candidate_original, candidate_continuous)]
 
     count_img_edge_continuous = \
-        [len(np.transpose(np.where((a == candidate).all(axis = 1)))
-                for candidate in (candidate_original, candidate_continuous))]
+        [len(np.transpose(np.where((arr == candidate).all(axis=1))))
+            for candidate in (candidate_original, candidate_continuous)]
 
     return count_img_edge_full, count_img_edge_continuous
 
 
-def _mode_response(text, winner):
-    if debug:
-        click.echo('%s %s' % (str(text) + str(winner)))
-    else:
-        click.echo('{} {} {}'.format(*winner))
-
-def _debug_mode(rgb_flat, candidate_original, candidate_continuous):
+def _debug_mode(rgb_flat, arr, output):
     import matplotlib.pyplot as plt
     plt.hist(rgb_flat, bins=range(256))
-    plt.show()
-    plt.hist(a, bins=range(256)) #histogram of continuous values only
-    plt.show()
-    click,echo('Original image ndv candidate: %s' %(str(candidate_original)))
-    click.echo('Filtered image ndv candidate: %s' %(str(candidate_continuous)))
+    plt.hist(arr, bins=range(256)) #histogram of continuous values only
+    plt.savefig(output, bbox_inches='tight')
+    plt.close()
+
+
+def _evaluate_count(lst1, lst2, verbose):
+    # Q: will these always realiably be ordered as listed above with original first, continuous second?
+    if (lst1[0] > lst1[1]) and \
+       (lst2[0] > lst2[1]):
+       return lst1
+
+    elif (lst1[0] < lst1[1]) and \
+         (lst2[0] < lst2[1]):
+        return lst2
+
+    else:
+        if verbose:
+            return "None"
+        else:
+            return ""
+

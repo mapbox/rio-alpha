@@ -41,7 +41,12 @@ def islossy(input, ndv):
 @click.option('--user_nodata', '-u',
               default=None,
               help="User supplies the nodata value, "
-              "input a single value or a list of per-band values.")
+              "input a single value or a string of list "
+              "containing per-band values.")
+@click.option('--discovery', is_flag=True,
+              default=False,
+              help="Prints extra information, "
+              "like competing candidate values")
 @click.option('--debug', is_flag=True,
               default=False,
               help="Enables matplotlib & printing of figures")
@@ -49,12 +54,8 @@ def islossy(input, ndv):
               default=False,
               help="Prints extra information, "
               "like competing candidate values")
-@click.option('--discovery', is_flag=True,
-              default=False,
-              help="Prints extra information, "
-              "like competing candidate values")
-def findnodata(src_path, user_nodata, debug, verbose, discovery):
-    ndv = determine_nodata(src_path, user_nodata, discovery)
+def findnodata(src_path, user_nodata, discovery, debug, verbose):
+    ndv = determine_nodata(src_path, user_nodata, discovery, debug, verbose)
     click.echo("%s" % ndv)
 
 
