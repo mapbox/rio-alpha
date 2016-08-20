@@ -1,6 +1,7 @@
 import click
 import pytest
 from click.testing import CliRunner
+import warnings
 
 from rio_alpha.scripts.cli import islossy, findnodata
 
@@ -137,7 +138,7 @@ def test_findnodata_debug_success():
     result = runner.invoke(findnodata, [
         'tests/fixtures/fi_all/W4441A.tiny.tif', 
         '--discovery', '--debug'])
+    warnings.filterwarnings("ignore", module="matplotlib")
     assert result.exit_code == 0
     assert 'Original image ndv candidate: [255, 255, 255]\n' \
-        'Filtered image ndv candidate: [255, 255, 255]\n' \
-        '255 255 255' in result.output
+        'Filtered image ndv candidate: [255, 255, 255]\n' in result.output

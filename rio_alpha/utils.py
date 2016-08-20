@@ -133,3 +133,4 @@ def _debug_mode(rgb_flat, arr, output):
     plt.hist(rgb_flat, bins=range(256))
     plt.hist(arr, bins=range(256)) #histogram of continuous values only
     plt.savefig(output, bbox_inches='tight')
+    plt.close()
