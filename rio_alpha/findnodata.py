@@ -12,10 +12,11 @@ from scipy.stats import mode
 from os.path import isfile
 from utils import (
     _convert_rgb, _group, _compute_continuous,
-    _mode_response, _find_continuous_rgb)
+    _debug_mode, _mode_response, _find_continuous_rgb,
+    _search_image_edge)
 
 
-def discover_ndv(rgb_orig, debug):
+def discover_ndv(rgb_orig, debug, verbose):
     rgb_mod, rgb_mod_flat = _convert_rgb(rgb_orig)
     # Full image mode bincount
     mode_vals = mode(rgb_mod_flat)
@@ -26,7 +27,10 @@ def discover_ndv(rgb_orig, debug):
  
     # If debug mode, print histograms & be verbose
     if debug:
-        _debug_mode(rgb_mod_flat, candidate_original, candidate_continuous)
+        click.echo('Original image ndv candidate: %s' %(str(candidate_original)))
+        click.echo('Filtered image ndv candidate: %s' %(str(candidate_continuous)))
+        outplot = "/tmp/hist_plot.png"
+        _debug_mode(rgb_mod_flat, arr, outplot)
 
     # Compare ndv candidates from full & squished image
     candidate_list = [i for i, j in zip(candidate_original, candidate_continuous) if i == j]
@@ -38,23 +42,23 @@ def discover_ndv(rgb_orig, debug):
     # If candidates do not match exactly, continue vetting process
     # by searching image edge for frequency of each candidate
     elif len(candidate_list) < 3:
-        if debug:
+        if verbose:
             click.echo("Competing ndv candidates...searching "
-                       "image collar for value frequency")
+                       "image collar for value frequency. "
+                       "Candidate list: %s" %str(candidate_list))
 
         count_img_edge_full, count_img_edge_continuous = \
-            search_image_edge(rgb_mod, arr,
+            _search_image_edge(rgb_mod, arr,
                               candidate_original,
                               candidate_continuous)
 
-        if debug:
+        if verbose:
             for candidate in (candidate_original, candidate_continuous):
                 click.echo('Candidate value: %s '
                            'Candidate count: %s '
                            'Continuous count: %s'
                            % (str(candidate), str(count_img_edge_full),
                               str(count_img_edge_continuous)))
-
 
         # Q: will these always realiably be ordered as listed above with original first, continuous second?
         if (count_img_edge_full[0] > count_img_edge_full[1]) and \
@@ -66,7 +70,7 @@ def discover_ndv(rgb_orig, debug):
             return candidate_continuous
 
         else:
-            if debug:
+            if verbose:
                 return "None"
             else:
                 return ""
@@ -75,15 +79,19 @@ def discover_ndv(rgb_orig, debug):
 
 
 
-def determine_nodata(src_path, debug, discovery):
+def determine_nodata(src_path, user_nodata, discovery, debug, verbose):
     ## Current pxm-alpha script:
     ### TAKES INPUT FILE AND REPORTS NO DATA VALUE BASED ON:
     ###  1) reports "alpha" if alpha channel exists
     ###  2) internal ndv if one exists exists
     ###  3) if neither 1 or 2, try mapbox written disovery method (discover_ndv function)
+
     with rio.open(src_path, "r") as src:
         count = src.count
         data = np.rollaxis(src.read(), 0, 3)
+
+    if user_nodata:
+        return user_nodata
 
     if (count == 4):
         return "alpha"
@@ -91,7 +99,7 @@ def determine_nodata(src_path, debug, discovery):
         nodata = src.nodata
         if (nodata == None):
             if discovery:
-                candidates = discover_ndv(data, debug)
+                candidates = discover_ndv(data, debug, verbose)
                 return '{} {} {}'.format(*candidates)
             else:
                 return ""

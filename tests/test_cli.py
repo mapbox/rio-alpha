@@ -2,7 +2,7 @@ import click
 import pytest
 from click.testing import CliRunner
 
-from rio_alpha.scripts.cli import islossy
+from rio_alpha.scripts.cli import islossy, findnodata
 
 
 def test_cli_missing_input():
@@ -97,3 +97,48 @@ def test_nolossy_same_three_value_ndv():
     ])
     assert result.exit_code == 0
     assert result.output.strip('\n') == ""
+
+
+def test_findnodata_default_success():
+    runner = CliRunner()
+    result = runner.invoke(findnodata,[
+        'tests/fixtures/dk_all/320_ECW_UTM32-EUREF89.tiny.tif',
+        ])
+    assert result.exit_code == 0
+    assert result.output.strip('\n') == ""
+
+
+def test_findnodata_discovery_success():
+    runner = CliRunner()
+    result = runner.invoke(findnodata,[
+        'tests/fixtures/dk_all/320_ECW_UTM32-EUREF89.tiny.tif',
+        '--discovery'])
+    assert result.exit_code == 0
+    assert result.output.strip('\n') == "18 51 62"
+
+def test_findnodata_user_nodata_success():
+    runner = CliRunner()
+    result = runner.invoke(findnodata, [
+        'tests/fixtures/dk_all/320_ECW_UTM32-EUREF89.tiny.tif',
+        '--user_nodata', '255 255 255'])
+    assert result.exit_code == 0
+    assert result.output.strip('\n') == '255 255 255'
+
+def test_findnodata_verbose_success():
+    runner = CliRunner()
+    result = runner.invoke(findnodata, [
+        'tests/fixtures/fi_all/W4441A.tiny.tif',
+        '--discovery', '--verbose'])
+    assert result.exit_code == 0
+    assert result.output.strip('\n') == '255 255 255'
+
+def test_findnodata_debug_success():
+    runner = CliRunner()
+    result = runner.invoke(findnodata, [
+        'tests/fixtures/fi_all/W4441A.tiny.tif', 
+        '--discovery', '--debug'])
+    assert result.exit_code == 0
+    assert result.output.strip('\n') == \
+        'Original image ndv candidate: [255, 255, 255]\n' \
+        'Filtered image ndv candidate: [255, 255, 255]\n' \
+        '255 255 255'
