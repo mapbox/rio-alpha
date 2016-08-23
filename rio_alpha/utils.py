@@ -51,6 +51,15 @@ def _parse_ndv(ndv, bands):
         return [_parse_single(ndv) for i in range(bands)]
 
 
+def _invert_all_rollaxis(img, depth, ndv, ax):
+    alpha = np.invert(
+                np.all(
+                    np.rollaxis(img, 0, depth) == ndv,
+                    axis=ax))
+
+    return alpha
+
+
 def _convert_rgb(rgb_orig):
     # Sample to ~200 in smaller dimension if > 200 for performance
     if rgb_orig[:, :, 0].shape[0] < rgb_orig[:, :, 0].shape[1]:
