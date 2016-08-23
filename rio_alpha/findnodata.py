@@ -12,8 +12,8 @@ from scipy.stats import mode
 from os.path import isfile
 from utils import (
     _convert_rgb, _group, _compute_continuous,
-    _debug_mode, _mode_response, _find_continuous_rgb,
-    _search_image_edge)
+    _debug_mode, _find_continuous_rgb,
+    _search_image_edge, _evaluate_count)
 
 
 def discover_ndv(rgb_orig, debug, verbose):
@@ -48,9 +48,9 @@ def discover_ndv(rgb_orig, debug, verbose):
                        "Candidate list: %s" %str(candidate_list))
 
         count_img_edge_full, count_img_edge_continuous = \
-            _search_image_edge(rgb_mod, arr,
-                              candidate_original,
-                              candidate_continuous)
+            _search_image_edge(rgb_mod,
+                               candidate_original,
+                               candidate_continuous)
 
         if verbose:
             for candidate in (candidate_original, candidate_continuous):
@@ -60,20 +60,13 @@ def discover_ndv(rgb_orig, debug, verbose):
                            % (str(candidate), str(count_img_edge_full),
                               str(count_img_edge_continuous)))
 
-        # Q: will these always realiably be ordered as listed above with original first, continuous second?
-        if (count_img_edge_full[0] > count_img_edge_full[1]) and \
-           (count_img_edge_continuous[0] > count_img_edge_continuous[1]):
-           return candidate_original
 
-        elif (count_img_edge_full[0] < count_img_edge_full[1]) and \
-             (count_img_edge_continuous[0] < count_img_edge_continuous[1]):
-            return candidate_continuous
+        output = _evaluate_count(count_img_edge_full,
+                                count_img_edge_continuous,
+                                verbose)
 
-        else:
-            if verbose:
-                return "None"
-            else:
-                return ""
+        return output
+
     else:
         return 'Invalid %s ' % (str(candidate_list))
 
@@ -104,11 +97,9 @@ def determine_nodata(src_path, user_nodata, discovery, debug, verbose):
             else:
                 return ""
         else:
-            return '%s %s %s' % (str(int(nodata[0])),
-                                     str(int(nodata[1])),
-                                     str(int(nodata[2])))
+            return '%s' % (str(int(nodata)))
 
-    # """returns a 2D array with a GDAL-style mask determined by
+    # New approach returns a 2D array with a GDAL-style mask determined by
     # the following criteria, in order of precedence:
 
     # 1. If a .msk file, dataset-wide alpha or internal mask exists,
