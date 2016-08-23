@@ -19,7 +19,8 @@ def alpha():
 @click.command('islossy')
 @click.argument('input', nargs=1, type=click.Path(exists=True))
 @click.option('--ndv', default='[0, 0, 0]',
-              help='Expects an integer or a len(list) == 3 representing a nodata value')
+              help='Expects an integer or a len(list) '
+              '== 3 representing a nodata value')
 def islossy(input, ndv):
     """
     Determine if there are >= 10 nodata regions in an image
@@ -45,8 +46,8 @@ def islossy(input, ndv):
               "containing per-band values.")
 @click.option('--discovery', is_flag=True,
               default=False,
-              help="Prints extra information, "
-              "like competing candidate values")
+              help="Determines nodata if alpha channel"
+              "does not exist or internal ndv does not exist")
 @click.option('--debug', is_flag=True,
               default=False,
               help="Enables matplotlib & printing of figures")
