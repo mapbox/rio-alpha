@@ -28,7 +28,7 @@ Usage
 #### `islossy`
 
 ```bash
-❯ rio alpha islossy --help                                                                         15:47
+❯ rio alpha islossy --help                                                                    
 Usage: rio alpha islossy [OPTIONS] INPUT
 
   Determine if there are >= 10 nodata regions in an image
@@ -41,3 +41,24 @@ Options:
 ```
 
 This is a direct replacement for the `pxm-islossy` function in  [pxm](https://github.com/mapbox/pxm/blob/88f147e91bfaad84f4e1777fc4be4cf9dec1d294/pxm-islossy).
+
+
+#### `findnodata`
+
+```bash
+❯ rio alpha findnodata --help
+
+Usage: rio alpha findnodata [OPTIONS] SRC_PATH
+
+Options:
+  -u, --user_nodata TEXT  User supplies the nodata value, input a single value
+                          or a string of list containing per-band values.
+  --discovery             Determines nodata if alpha channeldoes not exist or
+                          internal ndv does not exist
+  --debug                 Enables matplotlib & printing of figures
+  -v, --verbose           Prints extra information, like competing candidate
+                          values
+  --help                  Show this message and exit.
+
+```
+This is a direct replacement for the `pxm-findnodata` function in  [pxm](https://github.com/mapbox/pxm/blob/88f147e91bfaad84f4e1777fc4be4cf9dec1d294/pxm-findnodata).

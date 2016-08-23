@@ -75,12 +75,13 @@ def _convert_rgb(rgb_orig):
 # Squish array to only continuous values, return is in list form
 def _find_continuous_rgb(input_array, axis_num):
     diff_array = np.diff(input_array, axis=int(axis_num))
-    diff_array = np.insert(diff_array, 0,[99, 99, 99], axis=int(axis_num))
+    diff_array = np.insert(diff_array, 0, [99, 99, 99], axis=int(axis_num))
     val_list = (input_array[diff_array == [0, 0, 0]]).tolist()
     return val_list
 
 
-# Find modal RGB value of continuous values array (val_list), takes list, returns [R,G,B]
+# Find modal RGB value of continuous values array
+# (val_list), takes list, returns [R,G,B]
 def _group(lst, n, continuous):
     arr = np.asarray(zip(*[lst[i::n] for i in range(n)]))
     mode_vals = mode(arr)
@@ -89,7 +90,7 @@ def _group(lst, n, continuous):
 
 
 def _compute_continuous(rgb_mod, loc):
-    cont_lst= []
+    cont_lst = []
     return _group(_find_continuous_rgb(rgb_mod, loc),
                   3,
                   cont_lst)
@@ -102,14 +103,14 @@ def _search_image_edge(rgb_mod, candidate_original, candidate_continuous):
     first_col = rgb_mod[:, 0, :]
     last_col = rgb_mod[:, -1, :]
     img_edge = np.concatenate(
-                    (top_row,last_col, bottom_row, first_col),
+                    (top_row, last_col, bottom_row, first_col),
                     axis=0
                 )
 
-    # Squish image edge down to just continuous values 
+    # Squish image edge down to just continuous values
     edge_mode_continuous, arr = _compute_continuous(rgb_mod, 0)
 
-     # Count nodata value frequency in full image edge & squished image edge
+    # Count nodata value frequency in full image edge & squished image edge
     count_img_edge_full = \
         [len(np.transpose(np.where((img_edge == candidate).all(axis=1))))
             for candidate in (candidate_original, candidate_continuous)]
@@ -124,16 +125,18 @@ def _search_image_edge(rgb_mod, candidate_original, candidate_continuous):
 def _debug_mode(rgb_flat, arr, output):
     import matplotlib.pyplot as plt
     plt.hist(rgb_flat, bins=range(256))
-    plt.hist(arr, bins=range(256)) #histogram of continuous values only
+    # histogram of continuous values only
+    plt.hist(arr, bins=range(256))
     plt.savefig(output, bbox_inches='tight')
     plt.close()
 
 
 def _evaluate_count(lst1, lst2, verbose):
-    # Q: will these always realiably be ordered as listed above with original first, continuous second?
+    # Q: will these always realiably be ordered as listed
+    # above with original first, continuous second?
     if (lst1[0] > lst1[1]) and \
        (lst2[0] > lst2[1]):
-       return lst1
+        return lst1
 
     elif (lst1[0] < lst1[1]) and \
          (lst2[0] < lst2[1]):
@@ -144,4 +147,3 @@ def _evaluate_count(lst1, lst2, verbose):
             return "None"
         else:
             return ""
-

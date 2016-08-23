@@ -29,4 +29,3 @@ def count_ndv_regions(img, ndv):
     )
 
     return n_labels
-

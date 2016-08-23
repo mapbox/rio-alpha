@@ -30,10 +30,14 @@ def mask_exact(img, ndv):
     Returns
     --------
     alpha: ndarray
-        ndarray mask of shape (rows, cols) where opaque == 0 and transparent == max of dtype
+        ndarray mask of shape (rows, cols) where
+        opaque == 0 and transparent == max of dtype
     '''
     depth, rows, cols = img.shape
     nd = np.iinfo(img.dtype).max
-    alpha = np.invert(np.all(np.rollaxis(img, 0, depth) == ndv, axis=2)).astype(img.dtype) * nd
+    alpha = np.invert(
+                np.all(
+                    np.rollaxis(img, 0, depth) == ndv,
+                    axis=2)).astype(img.dtype) * nd
 
     return alpha
