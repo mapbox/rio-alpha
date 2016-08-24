@@ -80,9 +80,10 @@ def findnodata(src_path, user_nodata, discovery, debug, verbose):
               help="Enables matplotlib & printing of figures")
 @click.option('--workers', '-j', type=int, default=4)
 def addalpha(src_path, dst_path, ndv, lossy, threshold,
-             sieve_size, debug, workers):
+             sieve_size, blocksize, debug, workers):
+    ndv = _parse_ndv(ndv, 3)
     add_alpha(src_path, dst_path, ndv, lossy, threshold,
-              sieve_size, debug, workers)
+              sieve_size, blocksize, debug, workers)
 
 
 alpha.add_command(islossy)

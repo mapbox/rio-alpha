@@ -52,10 +52,16 @@ def _parse_ndv(ndv, bands):
 
 
 def _invert_all_rollaxis(img, depth, ndv, ax):
-    alpha = np.invert(
-                np.all(
-                    np.rollaxis(img, 0, depth) == ndv,
-                    axis=ax))
+    if ndv is None:
+        alpha = np.invert(
+                    np.all(
+                        np.rollaxis(img, 0, depth),
+                        axis=ax))
+    else:
+        alpha = np.invert(
+                    np.all(
+                        np.rollaxis(img, 0, depth) == ndv,
+                        axis=ax))
 
     return alpha
 

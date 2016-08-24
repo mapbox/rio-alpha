@@ -30,7 +30,7 @@ def mask_exact_threshold(rgb, hi_list, lo_list):
     alpha = _invert_all_rollaxis(
                 np.logical_and(rgb < max(hi_list), rgb > min(lo_list)),
                 depth,
-                ndv,
+                ndv=None,
                 ax=2)
 
     alpha_rescale = alpha.astype(rgb.dtype) * np.iinfo(rgb.dtype).max

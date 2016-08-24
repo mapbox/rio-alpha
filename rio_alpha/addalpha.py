@@ -4,18 +4,19 @@ from rasterio.features import sieve
 import scipy as sp
 from scipy import ndimage
 from alpha_mask import mask_exact_threshold, mask_exact
+import riomucho
 
 
 def calc_alpha_thresh(rgb, ndv, thresh):
-    lo_list = [(item - thresh) for item in ndv]
-    hi_list = [(item + thresh) for item in ndv]
+    lo_list = [(int(item) - thresh) for item in ndv]
+    hi_list = [(int(item) + thresh) for item in ndv]
 
     alpha = mask_exact_threshold(rgb, hi_list, lo_list)
 
     return alpha
 
 
-def calc_alpha_eroded(rgb, ndv, thresh, sieve_size, debug):
+def calc_alpha_eroded(rgb, ndv, thresh, sieveSize, debug):
     alpha = calc_alpha_thresh(rgb, ndv, thresh)
     sieved = sieve(alpha,
                    sieveSize,
@@ -32,34 +33,32 @@ def calc_alpha_eroded(rgb, ndv, thresh, sieve_size, debug):
     return eroded
 
 
-def calc_alpha(rgb, height, width, ndv, lossy, threshold, sieve_size, debug):
+def calc_alpha(rgb, height, width, ndv, lossy, thresh, sieve_size, debug):
     if ndv:
         if lossy:
-            if threshold:
-                thresh = int(threshold)
+            if thresh:
+                threshold = int(threshold)
             else:
                 # test_gradient = np.diff(rgb, axis=1)
                 # pull = int(( np.median(test_gradient) +
                 # np.mean(test_gradient) ) / 2)
-                thresh = 7
+                threshold = 7
 
             if sieve_size:
                 sieveSize = int(sieve_size)
             else:
                 sieveSize = int((height * width) * 0.005)
 
-            eroded = calc_alpha_eroded(rgb, ndv, thresh, sieveSize, debug)
+            eroded = calc_alpha_eroded(rgb, ndv, threshold, sieveSize, debug)
 
             return eroded
 
         else:
             alpha = mask_exact(rgb, ndv)
             return alpha
-            # alpha = np.invert(np.all(np.rollaxis(rgb, 0, 3) == ndv, axis=2))
-            # .astype(rgb.dtype) * np.iinfo(rgb.dtype).max
 
     else:
-        alpha = mask_exact(rgb, (0, 0, 0))
+        alpha = mask_exact(rgb, [0, 0, 0])
         return alpha
 
     if debug:
@@ -69,7 +68,7 @@ def calc_alpha(rgb, height, width, ndv, lossy, threshold, sieve_size, debug):
     return alpha
 
 
-def alpha_worker(open_file, window, ij, g_args):
+def _alpha_worker(open_file, window, ij, g_args):
     """Find nodata in input image
 
     Add an alpha channel to an image based on one of the following:
@@ -80,8 +79,7 @@ def alpha_worker(open_file, window, ij, g_args):
        control extent of lossy coverage
 
     """
-
-    rgb = open_file.read(window=window)
+    rgb = open_file[0].read(window=window)
     depth, rows, cols = rgb.shape
     height, width = rgb.shape[1:]
 
@@ -90,8 +88,8 @@ def alpha_worker(open_file, window, ij, g_args):
                        width,
                        g_args['ndv'],
                        g_args['lossy'],
-                       g_args['threshold'],
-                       g_args['sieve_size'],
+                       g_args['thresh'],
+                       g_args['sieveSize'],
                        g_args['debug'])
 
     rgba = np.append(rgb, alpha[np.newaxis, :, :], axis=0)
@@ -100,7 +98,7 @@ def alpha_worker(open_file, window, ij, g_args):
 
 
 def add_alpha(src_path, dst_path, ndv, lossy, threshold, sieve_size,
-              debug, processes):
+              blocksize, debug, processes):
 
     if debug:
         import matplotlib.pyplot as plt
@@ -139,7 +137,7 @@ def add_alpha(src_path, dst_path, ndv, lossy, threshold, sieve_size,
         'debug': debug
     }
 
-    with riomucho.RioMucho(src_path,
+    with riomucho.RioMucho([src_path],
                            dst_path,
                            _alpha_worker,
                            options=dst_profile,
