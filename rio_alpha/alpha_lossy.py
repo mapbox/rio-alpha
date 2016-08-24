@@ -33,29 +33,24 @@ def calc_alpha_eroded(rgb, ndv, thresh, sieveSize, debug):
     return eroded
 
 
-def calc_alpha(rgb, height, width, ndv, lossy, thresh, sieve_size, debug):
+def calc_alpha(rgb, height, width, ndv, thresh, sieve_size, debug):
     if ndv:
-        if lossy:
-            if thresh:
-                threshold = int(threshold)
-            else:
-                # test_gradient = np.diff(rgb, axis=1)
-                # pull = int(( np.median(test_gradient) +
-                # np.mean(test_gradient) ) / 2)
-                threshold = 7
-
-            if sieve_size:
-                sieveSize = int(sieve_size)
-            else:
-                sieveSize = int((height * width) * 0.005)
-
-            eroded = calc_alpha_eroded(rgb, ndv, threshold, sieveSize, debug)
-
-            return eroded
-
+        if thresh:
+            threshold = int(threshold)
         else:
-            alpha = mask_exact(rgb, ndv)
-            return alpha
+            # test_gradient = np.diff(rgb, axis=1)
+            # pull = int(( np.median(test_gradient) +
+            # np.mean(test_gradient) ) / 2)
+            threshold = 7
+
+        if sieve_size:
+            sieveSize = int(sieve_size)
+        else:
+            sieveSize = int((height * width) * 0.005)
+
+        eroded = calc_alpha_eroded(rgb, ndv, threshold, sieveSize, debug)
+
+        return eroded
 
     else:
         alpha = mask_exact(rgb, [0, 0, 0])
@@ -87,7 +82,6 @@ def _alpha_worker(open_file, window, ij, g_args):
                        height,
                        width,
                        g_args['ndv'],
-                       g_args['lossy'],
                        g_args['thresh'],
                        g_args['sieveSize'],
                        g_args['debug'])
@@ -97,7 +91,7 @@ def _alpha_worker(open_file, window, ij, g_args):
     return rgba
 
 
-def add_alpha(src_path, dst_path, ndv, lossy, threshold, sieve_size,
+def add_alpha_lossy(src_path, dst_path, ndv, threshold, sieve_size,
               blocksize, debug, processes):
 
     if debug:
@@ -131,7 +125,6 @@ def add_alpha(src_path, dst_path, ndv, lossy, threshold, sieve_size,
         'src_nodata': 0,
         'dst_dtype': dst_profile['dtype'],
         'ndv': ndv,
-        'lossy': lossy,
         'thresh': threshold,
         'sieveSize': sieve_size,
         'debug': debug
