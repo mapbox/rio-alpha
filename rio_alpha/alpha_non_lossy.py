@@ -39,8 +39,6 @@ def _alpha_worker(open_file, window, ij, g_args):
     height, width = rgb.shape[1:]
 
     alpha = calc_alpha(rgb,
-                       height,
-                       width,
                        g_args['ndv'],
                        g_args['debug'])
 
@@ -50,13 +48,15 @@ def _alpha_worker(open_file, window, ij, g_args):
 
 
 def add_alpha_non_lossy(src_path, dst_path, ndv,
-              blocksize, debug, processes):
+                        blocksize, debug, processes):
 
     if debug:
         import matplotlib.pyplot as plt
 
     with rio.open(src_path) as src:
         dst_profile = src.profile.copy()
+        height = src.height
+        width = src.width
 
     if blocksize:
         blocksize = blocksize[0]

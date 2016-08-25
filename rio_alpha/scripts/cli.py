@@ -101,10 +101,10 @@ def alpha_non_lossy(src_path, dst_path, ndv, blocksize, debug, workers):
               help="Enables matplotlib & printing of figures")
 @click.option('--workers', '-j', type=int, default=1)
 def alpha_lossy(src_path, dst_path, ndv, threshold,
-             sieve_size, blocksize, debug, workers):
+                sieve_size, blocksize, debug, workers):
     ndv = _parse_ndv(ndv, 3)
     add_alpha_lossy(src_path, dst_path, ndv, threshold,
-              sieve_size, blocksize, debug, workers)
+                    sieve_size, blocksize, debug, workers)
 
 
 alpha.add_command(islossy)

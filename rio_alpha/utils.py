@@ -51,21 +51,6 @@ def _parse_ndv(ndv, bands):
         return [_parse_single(ndv) for i in range(bands)]
 
 
-def _invert_all_rollaxis(img, depth, ndv, ax):
-    if ndv is None:
-        alpha = np.invert(
-                    np.all(
-                        np.rollaxis(img, 0, depth),
-                        axis=ax))
-    else:
-        alpha = np.invert(
-                    np.all(
-                        np.rollaxis(img, 0, depth) == ndv,
-                        axis=ax))
-
-    return alpha
-
-
 def _convert_rgb(rgb_orig):
     # Sample to ~200 in smaller dimension if > 200 for performance
     if rgb_orig[:, :, 0].shape[0] < rgb_orig[:, :, 0].shape[1]:
@@ -137,15 +122,6 @@ def _search_image_edge(rgb_mod, candidate_original, candidate_continuous):
     return count_img_edge_full, count_img_edge_continuous
 
 
-def _debug_mode(rgb_flat, arr, output):
-    import matplotlib.pyplot as plt
-    plt.hist(rgb_flat, bins=range(256))
-    # histogram of continuous values only
-    plt.hist(arr, bins=range(256))
-    plt.savefig(output, bbox_inches='tight')
-    plt.close()
-
-
 def _evaluate_count(lst1, lst2, verbose):
     # Q: will these always realiably be ordered as listed
     # above with original first, continuous second?
@@ -162,3 +138,12 @@ def _evaluate_count(lst1, lst2, verbose):
             return "None"
         else:
             return ""
+
+
+def _debug_mode(rgb_flat, arr, output):
+    import matplotlib.pyplot as plt
+    plt.hist(rgb_flat, bins=range(256))
+    # histogram of continuous values only
+    plt.hist(arr, bins=range(256))
+    plt.savefig(output, bbox_inches='tight')
+    plt.close()

@@ -92,7 +92,7 @@ def _alpha_worker(open_file, window, ij, g_args):
 
 
 def add_alpha_lossy(src_path, dst_path, ndv, threshold, sieve_size,
-              blocksize, debug, processes):
+                    blocksize, debug, processes):
 
     if debug:
         import matplotlib.pyplot as plt

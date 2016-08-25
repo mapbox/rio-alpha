@@ -1,5 +1,4 @@
 import numpy as np
-from utils import _invert_all_rollaxis
 
 
 def mask_exact(img, ndv):
@@ -19,7 +18,10 @@ def mask_exact(img, ndv):
         opaque == 0 and transparent == max of dtype
     '''
     depth, rows, cols = img.shape
-    alpha = _invert_all_rollaxis(img, depth, ndv, ax=2)
+    alpha = np.invert(
+                    np.all(
+                        np.rollaxis(img, 0, depth) == ndv,
+                        axis=2))
     alpha_rescale = alpha.astype(img.dtype) * np.iinfo(img.dtype).max
 
     return alpha_rescale
@@ -27,11 +29,14 @@ def mask_exact(img, ndv):
 
 def mask_exact_threshold(rgb, hi_list, lo_list):
     depth, rows, cols = rgb.shape
-    alpha = _invert_all_rollaxis(
-                np.logical_and(rgb < max(hi_list), rgb > min(lo_list)),
-                depth,
-                ndv=None,
-                ax=2)
+
+    alpha = np.invert(
+                np.all(
+                    np.rollaxis(
+                        np.logical_and(rgb < max(hi_list), rgb > min(lo_list)),
+                        0,
+                        depth),
+                    axis=2))
 
     alpha_rescale = alpha.astype(rgb.dtype) * np.iinfo(rgb.dtype).max
 
