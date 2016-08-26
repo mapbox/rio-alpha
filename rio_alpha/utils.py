@@ -122,15 +122,6 @@ def _search_image_edge(rgb_mod, candidate_original, candidate_continuous):
     return count_img_edge_full, count_img_edge_continuous
 
 
-def _debug_mode(rgb_flat, arr, output):
-    import matplotlib.pyplot as plt
-    plt.hist(rgb_flat, bins=range(256))
-    # histogram of continuous values only
-    plt.hist(arr, bins=range(256))
-    plt.savefig(output, bbox_inches='tight')
-    plt.close()
-
-
 def _evaluate_count(lst1, lst2, verbose):
     # Q: will these always realiably be ordered as listed
     # above with original first, continuous second?
@@ -147,3 +138,12 @@ def _evaluate_count(lst1, lst2, verbose):
             return "None"
         else:
             return ""
+
+
+def _debug_mode(rgb_flat, arr, output):
+    import matplotlib.pyplot as plt
+    plt.hist(rgb_flat, bins=range(256))
+    # histogram of continuous values only
+    plt.hist(arr, bins=range(256))
+    plt.savefig(output, bbox_inches='tight')
+    plt.close()

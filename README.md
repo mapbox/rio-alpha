@@ -28,8 +28,9 @@ Usage
 #### `islossy`
 
 ```bash
-❯ rio alpha islossy --help                                                                    
-Usage: rio alpha islossy [OPTIONS] INPUT
+❯ rio islossy --help
+
+Usage: rio islossy [OPTIONS] INPUT
 
   Determine if there are >= 10 nodata regions in an image
 
@@ -46,9 +47,9 @@ This is a direct replacement for the `pxm-islossy` function in  [pxm](https://gi
 #### `findnodata`
 
 ```bash
-❯ rio alpha findnodata --help
+❯ rio findnodata --help
 
-Usage: rio alpha findnodata [OPTIONS] SRC_PATH
+Usage: rio findnodata [OPTIONS] SRC_PATH
 
 Options:
   -u, --user_nodata TEXT  User supplies the nodata value, input a single value
@@ -62,3 +63,23 @@ Options:
 
 ```
 This is a direct replacement for the `pxm-findnodata` function in  [pxm](https://github.com/mapbox/pxm/blob/88f147e91bfaad84f4e1777fc4be4cf9dec1d294/pxm-findnodata).
+
+
+#### `alpha`
+
+```bash
+❯ rio alpha --help
+
+Usage: rio alpha [OPTIONS] SRC_PATH DST_PATH
+
+Options:
+  --ndv TEXT             Expects an integer or a list of 3 integers
+                         representing nodata values
+  --blocksize INTEGER    block size for interal tiling
+  -j, --workers INTEGER
+  --co NAME=VALUE        Driver specific creation options.See the
+                         documentation for the selected output driver for more
+                         information.
+  --help                 Show this message and exit.
+
+  This is a direct replacement for `pxm-alpha` function (non-lossy data only) in  [pxm](https://github.com/mapbox/pxm/blob/88f147e91bfaad84f4e1777fc4be4cf9dec1d294/pxm-findnodata).

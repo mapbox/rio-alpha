@@ -1,6 +1,6 @@
 click
 rasterio
 numpy
-rio-mucho
+rio-mucho>=0.2.1
 scikit-image
 scipy
