@@ -1,11 +1,15 @@
 from affine import Affine
+import hypothesis.strategies as st
+from hypothesis import given, example
+from hypothesis.extra.numpy import arrays
 import click
 import pytest
 import numpy as np
 import rasterio as rio
 from rasterio.warp import reproject, Resampling
-from rio_alpha.alpha_non_lossy import (
-    add_alpha_non_lossy, calc_alpha)
+from rio_alpha.alpha import (
+    add_alpha, calc_alpha)
+from rio_alpha.alpha_mask import mask_exact
 
 
 def affaux(up):
@@ -49,7 +53,7 @@ def test_var():
     return src_path1
 
 
-def test_(test_var, capfd):
+def test_add_alpha(test_var, capfd):
     src_path = test_var
     dst_path = '/tmp/alpha_non_lossy_1.tif'
     expected_path = 'tests/expected/expected_alpha/2012_30cm_592_5454.tiny.tif'
@@ -58,10 +62,41 @@ def test_(test_var, capfd):
     debug = False
     processes = 1
 
-    add_alpha_non_lossy(src_path, dst_path, ndv,
-                        blocksize, debug, processes)
+    add_alpha(src_path, dst_path, ndv,
+              blocksize, debug, processes)
     out, err = capfd.readouterr()
 
     with rio.open(dst_path) as created:
         with rio.open(expected_path) as expected:
             assert flex_compare(created.read(), expected.read())
+
+
+@given(arrays(np.uint8, (3, 8, 8),
+              elements=st.integers(0, np.iinfo(np.uint8).max)),
+       st.lists(elements=st.integers(min_value=0,
+                max_value=np.iinfo(np.uint8).max),
+                min_size=3,
+                max_size=3))
+def test_calc_alpha(arr, ndv):
+    debug = False
+    ndv = [255, 255, 255]
+    assert np.array_equal(calc_alpha(arr, ndv, debug), mask_exact(arr, ndv))
+
+
+@given(arrays(np.uint8, (3, 8, 8),
+              elements=st.integers(min_value=1, max_value=1)),
+       st.lists(elements=st.integers(min_value=1,
+                max_value=1),
+                min_size=3,
+                max_size=3))
+def test_calc_alpha2(arr, ndv):
+    debug = False
+    assert np.array_equal(calc_alpha(arr, ndv, debug), mask_exact(arr, 1))
+
+
+@given(arrays(np.uint8, (3, 8, 8),
+              elements=st.integers(min_value=1, max_value=1)))
+def test_calc_alpha_none_ndv(arr):
+    ndv=None
+    debug = False
+    assert np.array_equal(calc_alpha(arr, ndv, debug), mask_exact(arr, 0))

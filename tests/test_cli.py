@@ -1,15 +1,13 @@
+import os
+
+import rasterio
 import click
 import pytest
 from click.testing import CliRunner
 import warnings
 
-from rio_alpha.scripts.cli import alpha, islossy, findnodata
-
-
-def test_cli_alpha():
-    runner = CliRunner()
-    result = runner.invoke(alpha)
-    assert 'Usage: alpha' in result.output
+from rio_alpha.scripts.cli import (
+    alpha, islossy, findnodata)
 
 
 def test_cli_missing_input():
@@ -166,3 +164,51 @@ def test_findnodata_debug_success():
     assert result.exit_code == 0
     assert 'Original image ndv candidate: [255, 255, 255]\n' \
         'Filtered image ndv candidate: [255, 255, 255]\n' in result.output
+
+
+def test_alpha_default(tmpdir):
+    output = str(tmpdir.join('test_alpha.tif'))
+    runner = CliRunner()
+    result = runner.invoke(alpha, [
+        'tests/fixtures/dg_everest/everest_0430_R1C1.tiny.tif',
+        output])
+    assert result.exit_code == 0
+    assert os.path.exists(output)
+    with rasterio.open(output) as out:
+        assert out.count == 4
+        assert out.dtypes[-1] == rasterio.uint8
+        assert out.dtypes[0] == rasterio.uint8
+        assert out.profile['tiled'] is True
+        assert out.profile['blockxsize'] == 256
+
+
+def test_alpha_ndv(tmpdir):
+    output = str(tmpdir.join('test_alpha.tif'))
+    runner = CliRunner()
+    result = runner.invoke(alpha, [
+        'tests/fixtures/dk_all/320_ECW_UTM32-EUREF89.tiny.tif',
+        output,
+        '--ndv', '[18, 51, 62]'])
+    assert result.exit_code == 0
+    assert os.path.exists(output)
+    with rasterio.open(output) as out:
+        assert out.count == 4
+        assert out.dtypes[0] == rasterio.uint8
+
+
+def test_alpha_blocksize(tmpdir):
+    output = str(tmpdir.join('test_alpha.tif'))
+    runner = CliRunner()
+    result = runner.invoke(alpha, [
+        'tests/fixtures/dg_everest/everest_0430_R1C1.tiny.tif',
+        output,
+        '--ndv', '[0, 0, 0]',
+        '--blocksize', '128'])
+    assert result.exit_code == 0
+    assert os.path.exists(output)
+    with rasterio.open(output) as out:
+        assert out.count == 4
+        assert out.dtypes[-1] == rasterio.uint8
+        assert out.dtypes[0] == rasterio.uint8
+        assert out.profile['tiled'] is True
+        assert out.profile['blockxsize'] == 128

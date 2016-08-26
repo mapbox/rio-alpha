@@ -1,12 +1,11 @@
 import rasterio as rio
-from rio_alpha.findnodata import determine_nodata
 import hypothesis.strategies as st
 from hypothesis import given, example
 from hypothesis.extra.numpy import arrays
 import numpy as np
 import pytest
 from scipy.stats import mode
-from rio_alpha.findnodata import discover_ndv
+from rio_alpha.findnodata import discover_ndv, determine_nodata
 
 from rio_alpha.utils import (
     _convert_rgb, _find_continuous_rgb,
