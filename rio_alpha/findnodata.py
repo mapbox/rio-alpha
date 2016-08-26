@@ -32,7 +32,6 @@ def discover_ndv(rgb_orig, debug, verbose):
     -------
     list of nodata value candidates or empty string if none found
 
-
     """
     rgb_mod, rgb_mod_flat = _convert_rgb(rgb_orig)
     # Full image mode bincount

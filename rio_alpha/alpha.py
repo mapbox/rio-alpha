@@ -7,6 +7,28 @@ import riomucho
 
 
 def calc_alpha(rgb, ndv):
+    """Find nodata in input image
+
+    Add an alpha channel to an image based on one of the following:
+    1. no ndv input arg, alpha channel added with 100% 0 vals
+    2. --ndv input arg, alpha channel added with where
+       opaque == 0 and transparent == max of dtype
+
+    Parameters
+    ----------
+    rgb: ndarray
+         array of input pixels of shape (depth, rows, cols)
+    ndv: list
+         a list of floats where the
+         length of the list = band count
+
+    Returns
+    -------
+    alpha: ndarray
+           ndarray mask of shape (rows, cols) where
+           opaque == 0 and transparent == max of dtype
+
+    """
     if ndv:
             alpha = mask_exact(rgb, ndv)
             return alpha
@@ -17,16 +39,27 @@ def calc_alpha(rgb, ndv):
 
 
 def _alpha_worker(open_file, window, ij, g_args):
-    """Find nodata in input image
+    """rio mucho worker for alpha. It reads input
+    files and perform alpha calculations on each window.
 
-    Add an alpha channel to an image based on one of the following:
-    1. no ndv input arg, alpha channel added with 100% 255 vals
-    2. --ndv input arg, alpha channel added with 0s at ndv and
-       255s elsewhere
-    3. add lossy & sieve flags to scenarios with --ndv arg to
-       control extent of lossy coverage
+    Parameters
+    ------------
+    open_files: list of rasterio open files
+    window: tuples
+            A window is a view onto a rectangular subset of a
+            raster dataset and is described in rasterio
+            by a pair of range tuples:
+            ((row_start, row_stop), (col_start, col_stop))
+    g_args: dictionary
 
+    Returns
+    ---------
+    rgba: ndarray
+          ndarray with original RGB bands of shape (3, rows, cols)
+          and a mask of shape (rows, cols) where
+          opaque == 0 and transparent == max of dtype
     """
+
     rgb = open_file[0].read(window=window)
     depth, rows, cols = rgb.shape
 
@@ -40,6 +73,25 @@ def _alpha_worker(open_file, window, ij, g_args):
 
 def add_alpha(src_path, dst_path, ndv, creation_options,
               blocksize, processes):
+    """
+    Parameters
+    ------------
+    src_paths: list of strings
+    dst_path: string
+    ndv: list
+         a list of floats where the
+         length of the list = band count
+    creation_options: dict
+    blocksize: integer
+               block size for interal tiling
+    processes: integer
+
+
+    Returns
+    ---------
+    None
+        Output is written to dst_path
+    """
 
     with rio.open(src_path) as src:
         dst_profile = src.profile.copy()
