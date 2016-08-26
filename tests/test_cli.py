@@ -5,6 +5,7 @@ import click
 import pytest
 from click.testing import CliRunner
 import warnings
+from rasterio.enums import Compression
 
 from rio_alpha.scripts.cli import (
     alpha, islossy, findnodata)
@@ -18,7 +19,7 @@ def test_cli_missing_input():
     assert 'Invalid value for "input"' in result.output
 
 
-def test_lossy_single_value_ndv():
+def test_cli_lossy_single_value_ndv():
     result = CliRunner().invoke(islossy, [
         'tests/fixtures/ca_chilliwack/2012_30cm_594_5450.tiny.tif',
         '--ndv', '255'
@@ -27,7 +28,7 @@ def test_lossy_single_value_ndv():
     assert result.output.strip('\n') == "--lossy lossy"
 
 
-def test_lossy_single_value_ndv_fail():
+def test_cli_lossy_single_value_ndv_fail():
     runner = CliRunner()
     result = runner.invoke(islossy, [
         'tests/fixtures/ca_chilliwack/2012_30cm_594_5450.tiny.tif',
@@ -37,7 +38,7 @@ def test_lossy_single_value_ndv_fail():
     assert result.exit_code != 0
 
 
-def test_lossy_three_value_ndv():
+def test_cli_lossy_three_value_ndv():
     runner = CliRunner()
     result = runner.invoke(islossy, [
         'tests/fixtures/ca_chilliwack/2012_30cm_594_5450.tiny.tif',
@@ -61,7 +62,7 @@ def test_lossy_three_value_ndv():
     assert result.output.strip('\n') == "--lossy lossy"
 
 
-def test_lossy_three_value_ndv_fail():
+def test_cli_lossy_three_value_ndv_fail():
     runner = CliRunner()
     result = runner.invoke(islossy, [
         'tests/fixtures/ca_chilliwack/2012_30cm_594_5450.tiny.tif',
@@ -71,7 +72,7 @@ def test_lossy_three_value_ndv_fail():
     assert result.exit_code != 0
 
 
-def test_notlossy_single_value_ndv():
+def test_cli_notlossy_single_value_ndv():
     result = CliRunner().invoke(islossy, [
         'tests/fixtures/ca_chilliwack/2012_30cm_592_5452.tiny.tif',
         '--ndv', '255'
@@ -80,7 +81,7 @@ def test_notlossy_single_value_ndv():
     assert result.output.strip('\n') == ""
 
 
-def test_notlossy_diff_three_value_ndv():
+def test_cli_notlossy_diff_three_value_ndv():
     runner = CliRunner()
     result = runner.invoke(islossy, [
         'tests/fixtures/dk_all/320_ECW_UTM32-EUREF89.tiny.tif',
@@ -90,7 +91,7 @@ def test_notlossy_diff_three_value_ndv():
     assert result.output.strip('\n') == ""
 
 
-def test_nolossy_same_three_value_ndv():
+def test_cli_nolossy_same_three_value_ndv():
     runner = CliRunner()
     result = runner.invoke(islossy, [
         'tests/fixtures/ca_chilliwack/2012_30cm_592_5452.tiny.tif',
@@ -100,7 +101,7 @@ def test_nolossy_same_three_value_ndv():
     assert result.output.strip('\n') == ""
 
 
-def test_findnodata_default_success():
+def test_cli_findnodata_default_success():
     runner = CliRunner()
     result = runner.invoke(findnodata, [
         'tests/fixtures/dk_all/320_ECW_UTM32-EUREF89.tiny.tif',
@@ -109,7 +110,7 @@ def test_findnodata_default_success():
     assert result.output.strip('\n') == ""
 
 
-def test_findnodata_read_src_ndv():
+def test_cli_findnodata_read_src_ndv():
     runner = CliRunner()
     result = runner.invoke(findnodata, [
         'tests/fixtures/ca_chilliwack/2012_30cm_594_5450_src_ndv.tiny.tif',
@@ -118,7 +119,7 @@ def test_findnodata_read_src_ndv():
     assert result.output.strip('\n') == "255"
 
 
-def test_findnodata_read_4_bands():
+def test_cli_findnodata_read_4_bands():
     runner = CliRunner()
     result = runner.invoke(findnodata, [
         'tests/fixtures/ca_chilliwack/'
@@ -128,7 +129,7 @@ def test_findnodata_read_4_bands():
     assert result.output.strip('\n') == "alpha"
 
 
-def test_findnodata_discovery_success():
+def test_cli_findnodata_discovery_success():
     runner = CliRunner()
     result = runner.invoke(findnodata, [
         'tests/fixtures/dk_all/320_ECW_UTM32-EUREF89.tiny.tif',
@@ -137,7 +138,7 @@ def test_findnodata_discovery_success():
     assert result.output.strip('\n') == "18 51 62"
 
 
-def test_findnodata_user_nodata_success():
+def test_cli_findnodata_user_nodata_success():
     runner = CliRunner()
     result = runner.invoke(findnodata, [
         'tests/fixtures/dk_all/320_ECW_UTM32-EUREF89.tiny.tif',
@@ -146,7 +147,7 @@ def test_findnodata_user_nodata_success():
     assert result.output.strip('\n') == '255 255 255'
 
 
-def test_findnodata_verbose_success():
+def test_cli_findnodata_verbose_success():
     runner = CliRunner()
     result = runner.invoke(findnodata, [
         'tests/fixtures/fi_all/W4441A.tiny.tif',
@@ -155,7 +156,7 @@ def test_findnodata_verbose_success():
     assert result.output.strip('\n') == '255 255 255'
 
 
-def test_findnodata_debug_success():
+def test_cli_findnodata_debug_success():
     runner = CliRunner()
     result = runner.invoke(findnodata, [
         'tests/fixtures/fi_all/W4441A.tiny.tif',
@@ -166,7 +167,7 @@ def test_findnodata_debug_success():
         'Filtered image ndv candidate: [255, 255, 255]\n' in result.output
 
 
-def test_alpha_default(tmpdir):
+def test_cli_alpha_default(tmpdir):
     output = str(tmpdir.join('test_alpha.tif'))
     runner = CliRunner()
     result = runner.invoke(alpha, [
@@ -182,7 +183,7 @@ def test_alpha_default(tmpdir):
         assert out.profile['blockxsize'] == 256
 
 
-def test_alpha_ndv(tmpdir):
+def test_cli_alpha_ndv(tmpdir):
     output = str(tmpdir.join('test_alpha.tif'))
     runner = CliRunner()
     result = runner.invoke(alpha, [
@@ -196,7 +197,7 @@ def test_alpha_ndv(tmpdir):
         assert out.dtypes[0] == rasterio.uint8
 
 
-def test_alpha_blocksize(tmpdir):
+def test_cli_alpha_blocksize(tmpdir):
     output = str(tmpdir.join('test_alpha.tif'))
     runner = CliRunner()
     result = runner.invoke(alpha, [
@@ -212,3 +213,16 @@ def test_alpha_blocksize(tmpdir):
         assert out.dtypes[0] == rasterio.uint8
         assert out.profile['tiled'] is True
         assert out.profile['blockxsize'] == 128
+
+
+def test_cli_creation_opts(tmpdir):
+    output = str(tmpdir.join('test_alpha_opts.tif'))
+    runner = CliRunner()
+    result = runner.invoke(alpha, [
+        'tests/fixtures/dg_everest/everest_0430_R1C1.tiny.tif',
+        output,
+        '--co', 'compress=lzw'])
+    assert result.exit_code == 0
+
+    with rasterio.open(output, 'r') as src:
+        assert src.compression == Compression.lzw

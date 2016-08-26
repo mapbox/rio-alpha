@@ -9,7 +9,7 @@ from rio_alpha.alpha_mask import mask_exact
 
 @pytest.fixture
 def test_fixture():
-    src_path = 'tests/fixtures/ca_chilliwack/2012_30cm_594_5450.tiny.tif'
+    src_path = 'tests/fixtures/ca_chilliwack/2012_30cm_592_5452.tiny.tif'
 
     return src_path
 

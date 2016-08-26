@@ -6,7 +6,7 @@ from alpha_mask import mask_exact
 import riomucho
 
 
-def calc_alpha(rgb, ndv, debug):
+def calc_alpha(rgb, ndv):
     if ndv:
             alpha = mask_exact(rgb, ndv)
             return alpha
@@ -14,12 +14,6 @@ def calc_alpha(rgb, ndv, debug):
     else:
         alpha = mask_exact(rgb, [0, 0, 0])
         return alpha
-
-    if debug:
-        plt.imshow(rgba)
-        plt.show()
-
-    return alpha
 
 
 def _alpha_worker(open_file, window, ij, g_args):
@@ -37,24 +31,22 @@ def _alpha_worker(open_file, window, ij, g_args):
     depth, rows, cols = rgb.shape
 
     alpha = calc_alpha(rgb,
-                       g_args['ndv'],
-                       g_args['debug'])
+                       g_args['ndv'])
 
     rgba = np.append(rgb, alpha[np.newaxis, :, :], axis=0)
 
     return rgba
 
 
-def add_alpha(src_path, dst_path, ndv,
-              blocksize, debug, processes):
-
-    if debug:
-        import matplotlib.pyplot as plt
+def add_alpha(src_path, dst_path, ndv, creation_options,
+              blocksize, processes):
 
     with rio.open(src_path) as src:
         dst_profile = src.profile.copy()
         height = src.height
         width = src.width
+
+    dst_profile.update(**creation_options)
 
     if blocksize:
         blocksize = blocksize
@@ -65,7 +57,6 @@ def add_alpha(src_path, dst_path, ndv,
         count=4,
         transform=dst_profile['affine'],
         nodata=None,
-        compress='lzw',
         tiled=True,
         blockxsize=blocksize,
         blockysize=blocksize
@@ -78,8 +69,7 @@ def add_alpha(src_path, dst_path, ndv,
     global_args = {
         'src_nodata': 0,
         'dst_dtype': dst_profile['dtype'],
-        'ndv': ndv,
-        'debug': debug
+        'ndv': ndv
     }
 
     with riomucho.RioMucho([src_path],

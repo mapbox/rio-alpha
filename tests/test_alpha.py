@@ -47,8 +47,7 @@ def flex_compare(r1, r2, thresh=10):
 
 @pytest.fixture
 def test_var():
-    src_path1 = 'tests/fixtures/ca_chilliwack/' \
-                '2012_30cm_592_5454.tiled.tiny.tif'
+    src_path1 = 'tests/fixtures/dk_all/320_ECW_UTM32-EUREF89.tiny.tif'
 
     return src_path1
 
@@ -56,14 +55,15 @@ def test_var():
 def test_add_alpha(test_var, capfd):
     src_path = test_var
     dst_path = '/tmp/alpha_non_lossy_1.tif'
-    expected_path = 'tests/expected/expected_alpha/2012_30cm_592_5454.tiny.tif'
+    expected_path = 'tests/expected/expected_alpha/'\
+                    '320_ECW_UTM32-EUREF89.tiny.tif'
     ndv = [255, 255, 255]
+    creation_options = {}
     blocksize = None
-    debug = False
     processes = 1
 
-    add_alpha(src_path, dst_path, ndv,
-              blocksize, debug, processes)
+    add_alpha(src_path, dst_path, ndv, creation_options,
+              blocksize, processes)
     out, err = capfd.readouterr()
 
     with rio.open(dst_path) as created:
@@ -78,9 +78,8 @@ def test_add_alpha(test_var, capfd):
                 min_size=3,
                 max_size=3))
 def test_calc_alpha(arr, ndv):
-    debug = False
     ndv = [255, 255, 255]
-    assert np.array_equal(calc_alpha(arr, ndv, debug), mask_exact(arr, ndv))
+    assert np.array_equal(calc_alpha(arr, ndv), mask_exact(arr, ndv))
 
 
 @given(arrays(np.uint8, (3, 8, 8),
@@ -90,13 +89,11 @@ def test_calc_alpha(arr, ndv):
                 min_size=3,
                 max_size=3))
 def test_calc_alpha2(arr, ndv):
-    debug = False
-    assert np.array_equal(calc_alpha(arr, ndv, debug), mask_exact(arr, 1))
+    assert np.array_equal(calc_alpha(arr, ndv), mask_exact(arr, 1))
 
 
 @given(arrays(np.uint8, (3, 8, 8),
               elements=st.integers(min_value=1, max_value=1)))
 def test_calc_alpha_none_ndv(arr):
-    ndv=None
-    debug = False
-    assert np.array_equal(calc_alpha(arr, ndv, debug), mask_exact(arr, 0))
+    ndv = None
+    assert np.array_equal(calc_alpha(arr, ndv), mask_exact(arr, 0))
