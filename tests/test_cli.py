@@ -135,16 +135,16 @@ def test_cli_findnodata_discovery_success():
         'tests/fixtures/dk_all/320_ECW_UTM32-EUREF89.tiny.tif',
         '--discovery'])
     assert result.exit_code == 0
-    assert result.output.strip('\n') == "18 51 62"
+    assert result.output.strip('\n') == "[18, 51, 62]"
 
 
 def test_cli_findnodata_user_nodata_success():
     runner = CliRunner()
     result = runner.invoke(findnodata, [
         'tests/fixtures/dk_all/320_ECW_UTM32-EUREF89.tiny.tif',
-        '--user_nodata', '255 255 255'])
+        '--user_nodata', '[255, 255, 255]'])
     assert result.exit_code == 0
-    assert result.output.strip('\n') == '255 255 255'
+    assert result.output.strip('\n') == '[255, 255, 255]'
 
 
 def test_cli_findnodata_verbose_success():
@@ -153,7 +153,7 @@ def test_cli_findnodata_verbose_success():
         'tests/fixtures/fi_all/W4441A.tiny.tif',
         '--discovery', '--verbose'])
     assert result.exit_code == 0
-    assert result.output.strip('\n') == '255 255 255'
+    assert result.output.strip('\n') == '[255, 255, 255]'
 
 
 def test_cli_findnodata_debug_success():
