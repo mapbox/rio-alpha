@@ -171,7 +171,10 @@ def determine_nodata(src_path, user_nodata, discovery, debug, verbose):
         if nodata is None:
             if discovery:
                 candidates = discover_ndv(data, debug, verbose)
-                return '[{}, {}, {}]'.format(*candidates)
+                if len(candidates) != 3:
+                    return ""
+                else:
+                    return '[{}, {}, {}]'.format(*candidates)
             else:
                 return ""
         else:
