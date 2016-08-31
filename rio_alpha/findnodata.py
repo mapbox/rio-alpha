@@ -112,6 +112,9 @@ def determine_nodata(src_path, user_nodata, discovery, debug, verbose):
     Returns
     -------
     nodata value: string
+                  string(int) or stringified array of values of
+                  len == the number of bands.
+                  For example, string([int(ndv), int(ndv), int(ndv)])
 
 
     Current pxm-alpha script:
@@ -168,7 +171,7 @@ def determine_nodata(src_path, user_nodata, discovery, debug, verbose):
         if nodata is None:
             if discovery:
                 candidates = discover_ndv(data, debug, verbose)
-                return '{} {} {}'.format(*candidates)
+                return '[{}, {}, {}]'.format(*candidates)
             else:
                 return ""
         else:
