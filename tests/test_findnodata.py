@@ -19,13 +19,7 @@ def test_fixtures():
     src_path_ca = 'tests/fixtures/ca_chilliwack/2012_30cm_592_5452.tiny.tif'
     src_path_ca2 = 'tests/fixtures/ca_chilliwack/2012_30cm_594_5454.tiny.tif'
 
-    with rio.open(src_path_ca) as src_ca:
-        data_ca = np.rollaxis(src_ca.read(), 0, 3)
-
-    with rio.open(src_path_ca2) as src_ca2:
-        data_ca2 = np.rollaxis(src_ca2.read(), 0, 3)
-
-    return data_ca, data_ca2
+    return src_path_ca, src_path_ca2
 
 
 @pytest.fixture
@@ -54,6 +48,14 @@ def test_determine_nodata_return_alpha(test_fixture_4_band):
     src_path = test_fixture_4_band
     output = determine_nodata(src_path, None, False, False, False)
     assert output == 'alpha'
+
+
+def test_determine_nodata_return_none(test_fixtures):
+    src_path1, src_path2 = test_fixtures
+    output1 = determine_nodata(src_path1, None, False, False, False)
+    output2 = determine_nodata(src_path2, None, False, False, False)
+    assert output1 == ''
+    assert output2 == ''
 
 
 arr_str2 = arrays(np.uint8, (8, 8, 3),
