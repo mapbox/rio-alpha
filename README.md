@@ -25,6 +25,24 @@ pip install -e ".[test]"
 Usage
 -----
 
+#### `alpha`
+
+```bash
+❯ rio alpha --help
+
+Usage: rio alpha [OPTIONS] SRC_PATH DST_PATH
+
+Options:
+  --ndv TEXT             Expects an integer or a list of 3 integers
+                         representing nodata values
+  --blocksize INTEGER    block size for interal tiling
+  -j, --workers INTEGER
+  --co NAME=VALUE        Driver specific creation options.See the
+                         documentation for the selected output driver for more
+                         information.
+  --help                 Show this message and exit.
+  ```
+
 #### `islossy`
 
 ```bash
@@ -60,22 +78,3 @@ Options:
   --help                  Show this message and exit.
 
 ```
-
-
-#### `alpha`
-
-```bash
-❯ rio alpha --help
-
-Usage: rio alpha [OPTIONS] SRC_PATH DST_PATH
-
-Options:
-  --ndv TEXT             Expects an integer or a list of 3 integers
-                         representing nodata values
-  --blocksize INTEGER    block size for interal tiling
-  -j, --workers INTEGER
-  --co NAME=VALUE        Driver specific creation options.See the
-                         documentation for the selected output driver for more
-                         information.
-  --help                 Show this message and exit.
-  ```
