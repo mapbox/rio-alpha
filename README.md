@@ -13,7 +13,7 @@ Installation
 pip install git+ssh://git@github.com/mapbox/rio-alpha
 ```
 
-Alternatively, if you're looking to contibute:
+Alternatively, if you're looking to contribute:
 
 ```bash
 git clone git@github.com:mapbox/rio-alpha.git
