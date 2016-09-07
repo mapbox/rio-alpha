@@ -138,6 +138,14 @@ def test_cli_findnodata_discovery_success():
     assert result.output.strip('\n') == "[18, 51, 62]"
 
 
+def test_cli_findnodata_nodiscovery_success():
+    runner = CliRunner()
+    result = runner.invoke(findnodata, [
+        'tests/fixtures/dk_all/320_ECW_UTM32-EUREF89.tiny.tif'])
+    assert result.exit_code == 0
+    assert result.output.strip('\n') == ""
+
+
 def test_cli_findnodata_user_nodata_success():
     runner = CliRunner()
     result = runner.invoke(findnodata, [
