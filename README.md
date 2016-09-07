@@ -13,7 +13,7 @@ Installation
 pip install git+ssh://git@github.com/mapbox/rio-alpha
 ```
 
-Alternatively, if you're looking to contibute:
+Alternatively, if you're looking to contribute:
 
 ```bash
 git clone git@github.com:mapbox/rio-alpha.git
@@ -24,6 +24,23 @@ pip install -e ".[test]"
 
 Usage
 -----
+
+#### `alpha`
+
+```bash
+❯ rio alpha --help
+
+Usage: rio alpha [OPTIONS] SRC_PATH DST_PATH
+
+Options:
+  --ndv TEXT             Expects an integer or a list of 3 integers
+                         representing nodata values
+  -j, --workers INTEGER
+  --co NAME=VALUE        Driver specific creation options.See the
+                         documentation for the selected output driver for more
+                         information.
+  --help                 Show this message and exit.
+  ```
 
 #### `islossy`
 
@@ -40,8 +57,6 @@ Options:
   --ndv TEXT  Expects an integer or a len(list) == 3 representing a nodata
               value
 ```
-
-This is a direct replacement for the `pxm-islossy` function in  [pxm](https://github.com/mapbox/pxm/blob/88f147e91bfaad84f4e1777fc4be4cf9dec1d294/pxm-islossy).
 
 
 #### `findnodata`
@@ -62,24 +77,3 @@ Options:
   --help                  Show this message and exit.
 
 ```
-This is a direct replacement for the `pxm-findnodata` function in  [pxm](https://github.com/mapbox/pxm/blob/88f147e91bfaad84f4e1777fc4be4cf9dec1d294/pxm-findnodata).
-
-
-#### `alpha`
-
-```bash
-❯ rio alpha --help
-
-Usage: rio alpha [OPTIONS] SRC_PATH DST_PATH
-
-Options:
-  --ndv TEXT             Expects an integer or a list of 3 integers
-                         representing nodata values
-  --blocksize INTEGER    block size for interal tiling
-  -j, --workers INTEGER
-  --co NAME=VALUE        Driver specific creation options.See the
-                         documentation for the selected output driver for more
-                         information.
-  --help                 Show this message and exit.
-
-  This is a direct replacement for `pxm-alpha` function (non-lossy data only) in  [pxm](https://github.com/mapbox/pxm/blob/88f147e91bfaad84f4e1777fc4be4cf9dec1d294/pxm-findnodata).

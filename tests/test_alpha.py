@@ -59,11 +59,10 @@ def test_add_alpha(test_var, capfd):
                     '320_ECW_UTM32-EUREF89.tiny.tif'
     ndv = [255, 255, 255]
     creation_options = {}
-    blocksize = None
     processes = 1
 
     add_alpha(src_path, dst_path, ndv, creation_options,
-              blocksize, processes)
+              processes)
     out, err = capfd.readouterr()
 
     with rio.open(dst_path) as created:

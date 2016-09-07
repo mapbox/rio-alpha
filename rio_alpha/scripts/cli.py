@@ -61,13 +61,11 @@ def findnodata(src_path, user_nodata, discovery, debug, verbose):
 @click.option('--ndv', default='[0, 0, 0]',
               help='Expects an integer or a list of 3 integers '
               'representing nodata values')
-@click.option('--blocksize', type=int,
-              help='block size for interal tiling')
 @click.option('--workers', '-j', type=int, default=1)
 @click.pass_context
 @creation_options
 def alpha(ctx, src_path, dst_path, ndv, creation_options,
-          blocksize, workers):
+          workers):
     ndv = _parse_ndv(ndv, 3)
     add_alpha(src_path, dst_path, ndv, creation_options,
-              blocksize, workers)
+              workers)

@@ -187,8 +187,7 @@ def test_cli_alpha_default(tmpdir):
         assert out.count == 4
         assert out.dtypes[-1] == rasterio.uint8
         assert out.dtypes[0] == rasterio.uint8
-        assert out.profile['tiled'] is True
-        assert out.profile['blockxsize'] == 256
+        assert out.profile['tiled'] is False
 
 
 def test_cli_alpha_ndv(tmpdir):
@@ -212,15 +211,16 @@ def test_cli_alpha_blocksize(tmpdir):
         'tests/fixtures/dg_everest/everest_0430_R1C1.tiny.tif',
         output,
         '--ndv', '[0, 0, 0]',
-        '--blocksize', '128'])
+        '--co', 'blockxsize=128', '--co', 'blockysize=128'])
     assert result.exit_code == 0
     assert os.path.exists(output)
     with rasterio.open(output) as out:
         assert out.count == 4
         assert out.dtypes[-1] == rasterio.uint8
         assert out.dtypes[0] == rasterio.uint8
-        assert out.profile['tiled'] is True
-        assert out.profile['blockxsize'] == 128
+        assert out.profile['tiled'] is False
+        assert int(out.profile['blockxsize']) == 128
+        assert int(out.profile['blockysize']) == 128
 
 
 def test_cli_creation_opts(tmpdir):
