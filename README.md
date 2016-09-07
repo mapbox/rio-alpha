@@ -41,8 +41,6 @@ Options:
               value
 ```
 
-This is a direct replacement for the `pxm-islossy` function in  [pxm](https://github.com/mapbox/pxm/blob/88f147e91bfaad84f4e1777fc4be4cf9dec1d294/pxm-islossy).
-
 
 #### `findnodata`
 
@@ -62,7 +60,6 @@ Options:
   --help                  Show this message and exit.
 
 ```
-This is a direct replacement for the `pxm-findnodata` function in  [pxm](https://github.com/mapbox/pxm/blob/88f147e91bfaad84f4e1777fc4be4cf9dec1d294/pxm-findnodata).
 
 
 #### `alpha`
@@ -81,5 +78,4 @@ Options:
                          documentation for the selected output driver for more
                          information.
   --help                 Show this message and exit.
-
-  This is a direct replacement for `pxm-alpha` function (non-lossy data only) in  [pxm](https://github.com/mapbox/pxm/blob/88f147e91bfaad84f4e1777fc4be4cf9dec1d294/pxm-findnodata).
+  ```
