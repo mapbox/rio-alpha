@@ -29,9 +29,9 @@ def islossy(input, ndv):
     ndv = _parse_ndv(ndv, 3)
 
     if count_ndv_regions(img, ndv) >= 10:
-        click.echo("--lossy lossy")
+        click.echo("True")
     else:
-        click.echo("")
+        click.echo("False")
 
 
 @click.command('findnodata')

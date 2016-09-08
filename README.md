@@ -53,7 +53,7 @@ Usage: rio islossy [OPTIONS] INPUT
 
   Determine if there are >= 10 nodata regions in an image
 
-  If true, returns the string `--lossy lossy`.
+  If true, returns the string `True`. If false, returns the string 'False'
 
 Options:
   --ndv TEXT  Expects a string containing a single integer value (e.g. '255')
