@@ -15,7 +15,7 @@ pip install rio-alpha
 
 Alternatively, if you're looking to contribute:
 
-```bash
+```
 git clone git@github.com:mapbox/rio-alpha.git
 cd rio-alpha
 pip install -e ".[test]"
@@ -27,7 +27,7 @@ Usage
 
 #### `alpha`
 
-```bash
+```
 ❯ rio alpha --help
 
 Usage: rio alpha [OPTIONS] SRC_PATH DST_PATH
@@ -46,7 +46,7 @@ Options:
 
 #### `islossy`
 
-```bash
+```
 ❯ rio islossy --help
 
 Usage: rio islossy [OPTIONS] INPUT
@@ -65,7 +65,7 @@ Options:
 
 #### `findnodata`
 
-```bash
+```
 ❯ rio findnodata --help
 
 Usage: rio findnodata [OPTIONS] SRC_PATH
