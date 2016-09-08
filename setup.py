@@ -26,6 +26,8 @@ setup(
     long_description=long_description,
     classifiers=[],
     keywords='',
+    author=u"Virginia Ng",
+    author_email='virginia@mapbox.com',
     url='https://github.com/mapbox/rio-alpha',
     license='BSD',
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
