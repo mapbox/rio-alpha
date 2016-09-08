@@ -14,8 +14,10 @@ logger = logging.getLogger('rio_alpha')
 @click.command('islossy')
 @click.argument('input', nargs=1, type=click.Path(exists=True))
 @click.option('--ndv', default='[0, 0, 0]',
-              help='Expects an integer or a list of 3 integers '
-              'representing nodata values')
+              help="Expects a string containing a single integer value "
+              "(e.g. \'255\') or "
+              "a string representation of a list containing "
+              "per-band nodata values (e.g. \'[255, 255, 255]\').")
 def islossy(input, ndv):
     """
     Determine if there are >= 10 nodata regions in an image
@@ -37,8 +39,10 @@ def islossy(input, ndv):
 @click.option('--user_nodata', '-u',
               default=None,
               help="User supplies the nodata value, "
-              "input a single value or a string of list "
-              "containing per-band values.")
+              "input a string containing a single integer value "
+              "(e.g. \'255\') or "
+              "a string representation of a list containing "
+              "per-band nodata values (e.g. \'[255, 255, 255]\').")
 @click.option('--discovery', is_flag=True,
               default=False,
               help="Determines nodata if alpha channel"
@@ -59,8 +63,10 @@ def findnodata(src_path, user_nodata, discovery, debug, verbose):
 @click.argument('src_path', type=click.Path(exists=True))
 @click.argument('dst_path', type=click.Path(exists=False))
 @click.option('--ndv', default='[0, 0, 0]',
-              help='Expects an integer or a list of 3 integers '
-              'representing nodata values')
+              help="Expects a string containing a single integer value "
+              "(e.g. \'255\') or "
+              "a string representation of a list containing "
+              "per-band nodata values (e.g. \'[255, 255, 255]\').")
 @click.option('--workers', '-j', type=int, default=1)
 @click.pass_context
 @creation_options
