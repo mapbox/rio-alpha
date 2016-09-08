@@ -17,7 +17,7 @@ pip install rio-alpha
 Alternatively, if you're looking to contribute:
 
 ```
-git checkout git@github.com:mapbox/rio-alpha.git
+git clone git@github.com:mapbox/rio-alpha.git
 cd rio-alpha
 pip install -U pip
 pip install -r requirements.txt
