@@ -25,7 +25,7 @@ def test_cli_lossy_single_value_ndv():
         '--ndv', '255'
     ])
     assert result.exit_code == 0
-    assert result.output.strip('\n') == "--lossy lossy"
+    assert result.output.strip('\n') == "True"
 
 
 def test_cli_lossy_single_value_ndv_fail():
@@ -45,21 +45,21 @@ def test_cli_lossy_three_value_ndv():
         '--ndv', '[255, 255, 255]'
     ])
     assert result.exit_code == 0
-    assert result.output.strip('\n') == "--lossy lossy"
+    assert result.output.strip('\n') == "True"
 
     result = runner.invoke(islossy, [
         'tests/fixtures/dk_all/450_ECW_UTM32-EUREF89.tiny.tif',
         '--ndv', '[255, 255, 255]'
     ])
     assert result.exit_code == 0
-    assert result.output.strip('\n') == "--lossy lossy"
+    assert result.output.strip('\n') == "True"
 
     result = runner.invoke(islossy, [
         'tests/fixtures/fi_all/W4441A.tiny.tif',
         '--ndv', '[255, 255, 255]'
     ])
     assert result.exit_code == 0
-    assert result.output.strip('\n') == "--lossy lossy"
+    assert result.output.strip('\n') == "True"
 
 
 def test_cli_lossy_three_value_ndv_fail():
@@ -78,7 +78,7 @@ def test_cli_notlossy_single_value_ndv():
         '--ndv', '255'
     ])
     assert result.exit_code == 0
-    assert result.output.strip('\n') == ""
+    assert result.output.strip('\n') == "False"
 
 
 def test_cli_notlossy_diff_three_value_ndv():
@@ -88,7 +88,7 @@ def test_cli_notlossy_diff_three_value_ndv():
         '--ndv', '[18, 51, 62]'
     ])
     assert result.exit_code == 0
-    assert result.output.strip('\n') == ""
+    assert result.output.strip('\n') == "False"
 
 
 def test_cli_nolossy_same_three_value_ndv():
@@ -98,7 +98,7 @@ def test_cli_nolossy_same_three_value_ndv():
         '--ndv', '[255, 255, 255]'
     ])
     assert result.exit_code == 0
-    assert result.output.strip('\n') == ""
+    assert result.output.strip('\n') == "False"
 
 
 def test_cli_findnodata_default_success():
