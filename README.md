@@ -33,9 +33,10 @@ Usage
 Usage: rio alpha [OPTIONS] SRC_PATH DST_PATH
 
 Options:
-  --ndv TEXT             Expects an integer or a list of 3 integers
-                         representing nodata values
-  --blocksize INTEGER    block size for interal tiling
+  --ndv TEXT             Expects a string containing a single integer value
+                         (e.g. '255') or a string representation of a list
+                         containing per-band nodata values (e.g. '[255, 255,
+                         255]').
   -j, --workers INTEGER
   --co NAME=VALUE        Driver specific creation options.See the
                          documentation for the selected output driver for more
@@ -55,8 +56,10 @@ Usage: rio islossy [OPTIONS] INPUT
   If true, returns the string `--lossy lossy`.
 
 Options:
-  --ndv TEXT  Expects an integer or a len(list) == 3 representing a nodata
-              value
+  --ndv TEXT  Expects a string containing a single integer value (e.g. '255')
+              or a string representation of a list containing per-band nodata
+              values (e.g. '[255, 255, 255]').
+  --help      Show this message and exit.
 ```
 
 
@@ -68,8 +71,10 @@ Options:
 Usage: rio findnodata [OPTIONS] SRC_PATH
 
 Options:
-  -u, --user_nodata TEXT  User supplies the nodata value, input a single value
-                          or a string of list containing per-band values.
+  -u, --user_nodata TEXT  User supplies the nodata value, input a string
+                          containing a single integer value (e.g. '255') or a
+                          string representation of a list containing per-band
+                          nodata values (e.g. '[255, 255, 255]').
   --discovery             Determines nodata if alpha channeldoes not exist or
                           internal ndv does not exist
   --debug                 Enables matplotlib & printing of figures

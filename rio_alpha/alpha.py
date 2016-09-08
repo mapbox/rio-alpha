@@ -72,7 +72,7 @@ def _alpha_worker(open_file, window, ij, g_args):
 
 
 def add_alpha(src_path, dst_path, ndv, creation_options,
-              blocksize, processes):
+              processes):
     """
     Parameters
     ------------
@@ -82,8 +82,6 @@ def add_alpha(src_path, dst_path, ndv, creation_options,
          a list of floats where the
          length of the list = band count
     creation_options: dict
-    blocksize: integer
-               block size for interal tiling
     processes: integer
 
 
@@ -100,23 +98,10 @@ def add_alpha(src_path, dst_path, ndv, creation_options,
 
     dst_profile.update(**creation_options)
 
-    if blocksize:
-        blocksize = blocksize
-    else:
-        blocksize = 256
-
     dst_profile.update(
         count=4,
-        transform=dst_profile['affine'],
-        nodata=None,
-        tiled=True,
-        blockxsize=blocksize,
-        blockysize=blocksize
+        nodata=None
         )
-
-    # workaround for very narrow datasets - don't specify blocksize
-    if blocksize > min([width, height]):
-        del dst_profile['blockxsize'], dst_profile['blockysize']
 
     global_args = {
         'src_nodata': 0,
