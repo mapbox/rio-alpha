@@ -9,16 +9,19 @@ A [rasterio](https://github.com/mapbox/rasterio) plugin for working with nodata.
 Installation
 ------------
 
-```bash
+```
+pip install -U pip
 pip install rio-alpha
 ```
 
 Alternatively, if you're looking to contribute:
 
 ```
-git clone git@github.com:mapbox/rio-alpha.git
+git checkout git@github.com:mapbox/rio-alpha.git
 cd rio-alpha
-pip install -e ".[test]"
+pip install -U pip
+pip install -r requirements.txt
+pip install -e .
 ```
 
 
@@ -42,7 +45,7 @@ Options:
                          documentation for the selected output driver for more
                          information.
   --help                 Show this message and exit.
-  ```
+```
 
 #### `islossy`
 
