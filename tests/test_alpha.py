@@ -48,12 +48,13 @@ def flex_compare(r1, r2, thresh=10):
 @pytest.fixture
 def test_var():
     src_path1 = 'tests/fixtures/dk_all/320_ECW_UTM32-EUREF89.tiny.tif'
+    src_path2 = 'tests/fixtures/dg_flame/dg_flame_021223331233.tiny.tif'
 
-    return src_path1
+    return src_path1, src_path2
 
 
 def test_add_alpha(test_var, capfd):
-    src_path = test_var
+    src_path = test_var[0]
     dst_path = '/tmp/alpha_non_lossy_1.tif'
     expected_path = 'tests/expected/expected_alpha/'\
                     '320_ECW_UTM32-EUREF89.tiny.tif'
@@ -68,6 +69,26 @@ def test_add_alpha(test_var, capfd):
     with rio.open(dst_path) as created:
         with rio.open(expected_path) as expected:
             assert flex_compare(created.read(), expected.read())
+            assert expected.profile.get('photometric') is None
+
+
+def test_add_alpha_no_photometric(test_var, capfd):
+    src_path = test_var[-1]
+    dst_path = '/tmp/alpha_no_photometric_.tif'
+    expected_path = 'tests/expected/expected_alpha/'\
+                    'dg_flame_021223331233.tiny.tif'
+    ndv = [0, 0, 0]
+    creation_options = {}
+    processes = 1
+
+    add_alpha(src_path, dst_path, ndv, creation_options,
+              processes)
+    out, err = capfd.readouterr()
+
+    with rio.open(dst_path) as created:
+        with rio.open(expected_path) as expected:
+            assert flex_compare(created.read(), expected.read())
+            assert expected.profile.get('photometric') is None
 
 
 @given(arrays(np.uint8, (3, 8, 8),
