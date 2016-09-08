@@ -98,6 +98,8 @@ def add_alpha(src_path, dst_path, ndv, creation_options,
 
     dst_profile.update(**creation_options)
 
+    dst_profile.pop('photometric', None)
+
     dst_profile.update(
         count=4,
         nodata=None
