@@ -10,7 +10,7 @@ Installation
 ------------
 
 ```bash
-pip install git+ssh://git@github.com/mapbox/rio-alpha
+pip install rio-alpha
 ```
 
 Alternatively, if you're looking to contribute:
