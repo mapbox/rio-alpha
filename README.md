@@ -47,6 +47,9 @@ Options:
   --help                 Show this message and exit.
 ```
 
+###### The current version of rio alpha supports lossless file formats. For lossy file formats such as JPEG, this current version may produce compression artifacts. Stay tuned for the lossy version of rio alpha.
+
+
 #### `islossy`
 
 ```
