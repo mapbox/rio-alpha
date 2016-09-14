@@ -49,7 +49,7 @@ def flex_compare(r1, r2, thresh=10):
 def test_var():
     src_path1 = 'tests/fixtures/dk_all/320_ECW_UTM32-EUREF89.tiny.tif'
     src_path2 = 'tests/fixtures/dg_flame/dg_flame_021223331233.tiny.tif'
-    src_path3= 'tests/fixtures/internal_masks/tiny_mask_030230232033.tif'
+    src_path3 = 'tests/fixtures/internal_masks/tiny_mask_030230232033.tif'
 
     return src_path1, src_path2, src_path3
 

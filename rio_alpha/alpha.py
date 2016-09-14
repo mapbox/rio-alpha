@@ -67,11 +67,12 @@ def _alpha_worker(open_file, window, ij, g_args):
 
     if g_args['ndv_masks']:
         mask = open_file[0].read_masks(window=window)
-        alpha = calc_alpha(mask, [0, 0, 0])
-        rgba = np.append(rgb, alpha[np.newaxis, :, :], axis=0)
+        dt_min = np.iinfo(rgb.dtype).min
+        alpha = calc_alpha(mask, [dt_min, dt_min, dt_min])
     else:
         alpha = calc_alpha(rgb, g_args['ndv'])
-        rgba = np.append(rgb, alpha[np.newaxis, :, :], axis=0)
+
+    rgba = np.append(rgb, alpha[np.newaxis, :, :], axis=0)
 
     return rgba
 
