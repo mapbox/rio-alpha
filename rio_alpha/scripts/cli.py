@@ -67,11 +67,15 @@ def findnodata(src_path, user_nodata, discovery, debug, verbose):
               "(e.g. \'255\') or "
               "a string representation of a list containing "
               "per-band nodata values (e.g. \'[255, 255, 255]\').")
+@click.option('--ndv_masks', is_flag=True,
+              default=False,
+              help="TIFF file contains internal transparency masks."
+                   "Use internal masks to build alpha band")
 @click.option('--workers', '-j', type=int, default=1)
 @click.pass_context
 @creation_options
-def alpha(ctx, src_path, dst_path, ndv, creation_options,
+def alpha(ctx, src_path, dst_path, ndv, ndv_masks, creation_options,
           workers):
     ndv = _parse_ndv(ndv, 3)
-    add_alpha(src_path, dst_path, ndv, creation_options,
+    add_alpha(src_path, dst_path, ndv, ndv_masks, creation_options,
               workers)

@@ -204,6 +204,20 @@ def test_cli_alpha_ndv(tmpdir):
         assert out.dtypes[0] == rasterio.uint8
 
 
+def test_cli_alpha_ndv_masks(tmpdir):
+    output = str(tmpdir.join('test_alpha.tif'))
+    runner = CliRunner()
+    result = runner.invoke(alpha, [
+        'tests/fixtures/internal_masks/tiny_mask_030230232033.tif',
+        output,
+        '--ndv_masks'])
+    assert result.exit_code == 0
+    assert os.path.exists(output)
+    with rasterio.open(output) as out:
+        assert out.count == 4
+        assert out.dtypes[0] == rasterio.uint8
+
+
 def test_cli_alpha_blocksize(tmpdir):
     output = str(tmpdir.join('test_alpha.tif'))
     runner = CliRunner()
