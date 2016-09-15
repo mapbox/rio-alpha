@@ -40,6 +40,16 @@ Options:
                          (e.g. '255') or a string representation of a list
                          containing per-band nodata values (e.g. '[255, 255,
                          255]').
+  --ndv-masks            [Default: False]
+                         The dataset contains one of the
+                         following:
+                         1.internal nodata value set in metadata
+                         2.an alpha band
+                         3.an internal binary mask (formats
+                         like GTiff allow a mask that is not considered a
+                         band)
+                         4.an external binary mask (a *.msk file
+                         alongside the main raster)
   -j, --workers INTEGER
   --co NAME=VALUE        Driver specific creation options.See the
                          documentation for the selected output driver for more
@@ -77,7 +87,7 @@ Options:
 Usage: rio findnodata [OPTIONS] SRC_PATH
 
 Options:
-  -u, --user_nodata TEXT  User supplies the nodata value, input a string
+  -u, --user-nodata TEXT  User supplies the nodata value, input a string
                           containing a single integer value (e.g. '255') or a
                           string representation of a list containing per-band
                           nodata values (e.g. '[255, 255, 255]').

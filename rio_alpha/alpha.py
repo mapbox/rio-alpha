@@ -66,9 +66,9 @@ def _alpha_worker(open_file, window, ij, g_args):
     depth, rows, cols = rgb.shape
 
     if g_args['ndv_masks']:
-        mask = open_file[0].read_masks(window=window)
-        dt_min = np.iinfo(rgb.dtype).min
-        alpha = calc_alpha(mask, [dt_min, dt_min, dt_min])
+        mask = open_file[0].dataset_mask(window=window)
+        alpha = calc_alpha(np.array([mask,] *3), [0, 0, 0])
+
     else:
         alpha = calc_alpha(rgb, g_args['ndv'])
 
