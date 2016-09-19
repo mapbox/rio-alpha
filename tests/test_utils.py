@@ -93,7 +93,7 @@ def test_find_continuous_rgb(arr_str, num_axis):
 @given(st.integers(min_value=4, max_value=30))
 def test_group(m):
     lst = range(1, m)
-    arr = np.asarray(zip(*[lst[i::3] for i in range(3)]))
+    arr = np.asarray(list(zip(*[lst[i::3] for i in range(3)])))
     mode_vals = mode(arr)
     cont = [int((mode_vals[0])[0, i]) for i in range(3)]
     test = []
@@ -239,14 +239,13 @@ def test_evaluate_count_continuous():
 def test_evaluate_count_none():
     lst1 = [17, 15]
     lst2 = [26, 28]
-    output = _evaluate_count(lst1, lst2, True)
-
-    assert output == "None"
-
-
-def test_evaluate_count_none():
-    lst1 = [17, 15]
-    lst2 = [26, 28]
     output = _evaluate_count(lst1, lst2, False)
 
     assert output == ""
+
+
+def test_convert_rgba(test_fixtures):
+    a, _ = test_fixtures
+    amod = _convert_rgb(a)[0]
+    assert amod.shape == (222, 222, 3)
+    assert amod.sum() == 33611047

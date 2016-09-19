@@ -83,7 +83,7 @@ def _find_continuous_rgb(input_array, axis_num):
 # Find modal RGB value of continuous values array
 # (val_list), takes list, returns [R,G,B]
 def _group(lst, n, continuous):
-    arr = np.asarray(zip(*[lst[i::n] for i in range(n)]))
+    arr = np.asarray(list(zip(*[lst[i::n] for i in range(n)])))
     mode_vals = mode(arr)
     continuous = [int((mode_vals[0])[0, i]) for i in range(3)]
     return continuous, arr
