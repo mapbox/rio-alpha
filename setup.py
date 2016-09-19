@@ -34,12 +34,9 @@ setup(
     include_package_date=True,
     zip_safe=False,
     install_requires=read('requirements.txt').splitlines(),
-    extras_require={'test': [
-        'codecov',
-        'hypothesis',
-        'pytest',
-        'pytest-cov'
-    ]},
+    extras_require={
+        'plot': ['matplotlib'],
+        'test': ['codecov', 'hypothesis', 'pytest', 'pytest-cov']},
     entry_points="""
     [rasterio.rio_plugins]
     alpha=rio_alpha.scripts.cli:alpha
