@@ -9,7 +9,7 @@ from rasterio.features import sieve
 import scipy as sp
 from scipy.stats import mode
 from os.path import isfile
-from utils import (
+from rio_alpha.utils import (
     _convert_rgb, _group, _compute_continuous,
     _debug_mode, _find_continuous_rgb,
     _search_image_edge, _evaluate_count)
