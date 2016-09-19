@@ -216,8 +216,8 @@ def test_search_image_edge_ca2(test_fixtures):
             for candidate in (candidate_original, candidate_continuous)]
 
     assert img_edge.shape[0] == rgb_mod.shape[0] * 4
-    assert full == [348, 0]
-    assert cont == [12306, 0]
+    assert full == [242, 0]
+    assert cont == [7048, 0]
 
 
 def test_evaluate_count_original():
@@ -242,3 +242,9 @@ def test_evaluate_count_none():
     output = _evaluate_count(lst1, lst2, False)
 
     assert output == ""
+
+
+def test_convert_rgba(test_fixtures):
+    a, _ = test_fixtures
+    amod = _convert_rgb(a)[0]
+    assert amod.shape == (167, 167, 3)
