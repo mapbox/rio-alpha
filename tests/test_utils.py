@@ -242,10 +242,3 @@ def test_evaluate_count_none():
     output = _evaluate_count(lst1, lst2, False)
 
     assert output == ""
-
-
-def test_convert_rgba(test_fixtures):
-    a, _ = test_fixtures
-    amod = _convert_rgb(a)[0]
-    assert amod.shape == (222, 222, 3)
-    assert amod.sum() == 33611047
