@@ -1,18 +1,11 @@
-import math
-import numpy as np
-import numpy.ma as ma
-import pprint
-import rasterio as rio
 import click
-from rasterio import features
-from rasterio.features import sieve
-import scipy as sp
+import numpy as np
+import rasterio as rio
 from scipy.stats import mode
-from os.path import isfile
+
 from rio_alpha.utils import (
-    _convert_rgb, _group, _compute_continuous,
-    _debug_mode, _find_continuous_rgb,
-    _search_image_edge, _evaluate_count)
+    _convert_rgb, _compute_continuous,
+    _debug_mode, _search_image_edge, _evaluate_count)
 
 
 def discover_ndv(rgb_orig, debug, verbose):

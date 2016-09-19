@@ -1,9 +1,9 @@
-import re
 import json
-import numpy as np
-from scipy.stats import itemfreq
-from scipy.stats import mode
 import math
+import re
+
+import numpy as np
+from scipy.stats import mode
 
 
 def _parse_single(n):
