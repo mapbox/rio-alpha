@@ -49,8 +49,9 @@ def flex_compare(r1, r2, thresh=10):
 def test_var():
     src_path1 = 'tests/fixtures/dk_all/320_ECW_UTM32-EUREF89.tiny.tif'
     src_path2 = 'tests/fixtures/dg_flame/dg_flame_021223331233.tiny.tif'
+    src_path3 = 'tests/fixtures/internal_masks/tiny_mask_030230232033.tif'
 
-    return src_path1, src_path2
+    return src_path1, src_path2, src_path3
 
 
 def test_add_alpha(test_var, capfd):
@@ -59,10 +60,11 @@ def test_add_alpha(test_var, capfd):
     expected_path = 'tests/expected/expected_alpha/'\
                     '320_ECW_UTM32-EUREF89.tiny.tif'
     ndv = [255, 255, 255]
+    ndv_masks = False
     creation_options = {}
     processes = 1
 
-    add_alpha(src_path, dst_path, ndv, creation_options,
+    add_alpha(src_path, dst_path, ndv, ndv_masks, creation_options,
               processes)
     out, err = capfd.readouterr()
 
@@ -72,16 +74,38 @@ def test_add_alpha(test_var, capfd):
             assert expected.profile.get('photometric') is None
 
 
+def test_add_alpha_internal_mask(test_var, capfd):
+    src_path = test_var[2]
+    dst_path = '/tmp/alpha_internal_mask.tif'
+    expected_path = 'tests/expected/expected_alpha/'\
+                    'tiny_mask_030230232033.tif'
+    ndv = [255, 255, 255]
+    ndv_masks = True
+    creation_options = {}
+    processes = 1
+
+    add_alpha(src_path, dst_path, ndv, ndv_masks, creation_options,
+              processes)
+    out, err = capfd.readouterr()
+
+    with rio.open(dst_path) as created:
+        with rio.open(expected_path) as expected:
+            assert flex_compare(created.read(), expected.read())
+            assert expected.profile.get('photometric') is None
+            assert expected.profile.get('count') == 4
+
+
 def test_add_alpha_no_photometric(test_var, capfd):
-    src_path = test_var[-1]
+    src_path = test_var[1]
     dst_path = '/tmp/alpha_no_photometric_.tif'
     expected_path = 'tests/expected/expected_alpha/'\
                     'dg_flame_021223331233.tiny.tif'
     ndv = [0, 0, 0]
+    ndv_masks = False
     creation_options = {}
     processes = 1
 
-    add_alpha(src_path, dst_path, ndv, creation_options,
+    add_alpha(src_path, dst_path, ndv, ndv_masks, creation_options,
               processes)
     out, err = capfd.readouterr()
 

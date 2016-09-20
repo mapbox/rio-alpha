@@ -36,7 +36,7 @@ def islossy(input, ndv):
 
 @click.command('findnodata')
 @click.argument('src_path', type=click.Path(exists=True))
-@click.option('--user_nodata', '-u',
+@click.option('--user-nodata', '-u',
               default=None,
               help="User supplies the nodata value, "
               "input a string containing a single integer value "
@@ -67,11 +67,22 @@ def findnodata(src_path, user_nodata, discovery, debug, verbose):
               "(e.g. \'255\') or "
               "a string representation of a list containing "
               "per-band nodata values (e.g. \'[255, 255, 255]\').")
+@click.option('--ndv-masks', is_flag=True,
+              default=False,
+              help="[Default: False]\n"
+                   "The dataset contains one of the following:\n"
+                   "1.internal nodata value set in metadata\n"
+                   "2.an alpha band\n"
+                   "3.an internal binary mask "
+                   "(formats like GTiff allow a "
+                   "mask that is not considered a band)\n"
+                   "4.an external binary mask (a *.msk file alongside "
+                   "the main raster)\n")
 @click.option('--workers', '-j', type=int, default=1)
 @click.pass_context
 @creation_options
-def alpha(ctx, src_path, dst_path, ndv, creation_options,
+def alpha(ctx, src_path, dst_path, ndv, ndv_masks, creation_options,
           workers):
     ndv = _parse_ndv(ndv, 3)
-    add_alpha(src_path, dst_path, ndv, creation_options,
+    add_alpha(src_path, dst_path, ndv, ndv_masks, creation_options,
               workers)

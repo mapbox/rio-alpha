@@ -150,7 +150,7 @@ def test_cli_findnodata_user_nodata_success():
     runner = CliRunner()
     result = runner.invoke(findnodata, [
         'tests/fixtures/dk_all/320_ECW_UTM32-EUREF89.tiny.tif',
-        '--user_nodata', '[255, 255, 255]'])
+        '--user-nodata', '[255, 255, 255]'])
     assert result.exit_code == 0
     assert result.output.strip('\n') == '[255, 255, 255]'
 
@@ -197,6 +197,20 @@ def test_cli_alpha_ndv(tmpdir):
         'tests/fixtures/dk_all/320_ECW_UTM32-EUREF89.tiny.tif',
         output,
         '--ndv', '[18, 51, 62]'])
+    assert result.exit_code == 0
+    assert os.path.exists(output)
+    with rasterio.open(output) as out:
+        assert out.count == 4
+        assert out.dtypes[0] == rasterio.uint8
+
+
+def test_cli_alpha_ndv_masks(tmpdir):
+    output = str(tmpdir.join('test_alpha.tif'))
+    runner = CliRunner()
+    result = runner.invoke(alpha, [
+        'tests/fixtures/internal_masks/tiny_mask_030230232033.tif',
+        output,
+        '--ndv-masks'])
     assert result.exit_code == 0
     assert os.path.exists(output)
     with rasterio.open(output) as out:

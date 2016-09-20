@@ -1,3 +1,4 @@
+import click
 import numpy as np
 import rasterio as rio
 import riomucho
@@ -28,9 +29,10 @@ def calc_alpha(rgb, ndv):
            opaque == 0 and transparent == max of dtype
 
     """
+
     if ndv:
-            alpha = mask_exact(rgb, ndv)
-            return alpha
+        alpha = mask_exact(rgb, ndv)
+        return alpha
 
     else:
         alpha = mask_exact(rgb, [0, 0, 0])
@@ -62,15 +64,19 @@ def _alpha_worker(open_file, window, ij, g_args):
     rgb = open_file[0].read(window=window)
     depth, rows, cols = rgb.shape
 
-    alpha = calc_alpha(rgb,
-                       g_args['ndv'])
+    if g_args['ndv_masks']:
+        mask = open_file[0].dataset_mask(window=window)
+        alpha = calc_alpha(np.array([mask,] *3), [0, 0, 0])
+
+    else:
+        alpha = calc_alpha(rgb, g_args['ndv'])
 
     rgba = np.append(rgb, alpha[np.newaxis, :, :], axis=0)
 
     return rgba
 
 
-def add_alpha(src_path, dst_path, ndv, creation_options,
+def add_alpha(src_path, dst_path, ndv, ndv_masks, creation_options,
               processes):
     """
     Parameters
@@ -107,7 +113,8 @@ def add_alpha(src_path, dst_path, ndv, creation_options,
     global_args = {
         'src_nodata': 0,
         'dst_dtype': dst_profile['dtype'],
-        'ndv': ndv
+        'ndv': ndv,
+        'ndv_masks': ndv_masks
     }
 
     with riomucho.RioMucho([src_path],
