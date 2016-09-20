@@ -4,3 +4,4 @@ numpy
 rio-mucho>=0.2.1
 scikit-image
 scipy
+matplotlib

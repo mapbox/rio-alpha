@@ -1,9 +1,8 @@
 import numpy as np
 import rasterio as rio
-import scipy as sp
-from scipy import ndimage
-from alpha_mask import mask_exact
 import riomucho
+
+from rio_alpha.alpha_mask import mask_exact
 
 
 def calc_alpha(rgb, ndv):
