@@ -234,3 +234,11 @@ def test_cli_creation_opts(tmpdir):
 
     with rasterio.open(output, 'r') as src:
         assert src.compression == Compression.lzw
+
+
+def test_cli_rgba(tmpdir):
+    output = str(tmpdir.join('test_out.tif'))
+    runner = CliRunner()
+    result = runner.invoke(
+        alpha, ['tests/fixtures/landsat/LC80460272013104LGN01_l8sr.tif', output])
+    assert result.exit_code == 0
