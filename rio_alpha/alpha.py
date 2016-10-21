@@ -39,12 +39,12 @@ def _alpha_worker(open_file, window, ij, g_args):
 
     # Replace or Add alpha band to input data
     if arr.shape[0] == 4:
-        # replace alpha band with rasterio dataset_mask
+        # replace band 4 with new alpha mask
         # (likely the same but let's not make that assumption)
         rgba = arr.copy()
         rgba[3] = alpha
     elif arr.shape[0] == 3:
-        # stack the dataset_mask to add alpha band
+        # stack the alpha mask to add band 4
         rgba = np.append(arr, alpha[np.newaxis, :, :], axis=0)
     else:
         raise ValueError("Array must have 3 or 4 bands (RGB or RGBA)")
