@@ -242,3 +242,12 @@ def test_cli_rgba(tmpdir):
     result = runner.invoke(
         alpha, ['tests/fixtures/landsat/LC80460272013104LGN01_l8sr.tif', output])
     assert result.exit_code == 0
+
+
+def test_cli_must_be_3or4band(tmpdir):
+    output = str(tmpdir.join('test_out.tif'))
+    runner = CliRunner()
+    result = runner.invoke(
+        alpha, ['tests/fixtures/landsat/two_bands.tif', output])
+    assert result.exit_code != 0
+    assert "Array must have 3 or 4 bands (RGB or RGBA)" in result.output
