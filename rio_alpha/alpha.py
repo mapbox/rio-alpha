@@ -1,40 +1,7 @@
 import numpy as np
 import rasterio as rio
 import riomucho
-
 from rio_alpha.alpha_mask import mask_exact
-
-
-def calc_alpha(rgb, ndv):
-    """Find nodata in input image
-
-    Add an alpha channel to an image based on one of the following:
-    1. no ndv input arg, alpha channel added with 100% 0 vals
-    2. --ndv input arg, alpha channel added with where
-       opaque == 0 and transparent == max of dtype
-
-    Parameters
-    ----------
-    rgb: ndarray
-         array of input pixels of shape (depth, rows, cols)
-    ndv: list
-         a list of floats where the
-         length of the list = band count
-
-    Returns
-    -------
-    alpha: ndarray
-           ndarray mask of shape (rows, cols) where
-           opaque == 0 and transparent == max of dtype
-
-    """
-    if ndv:
-            alpha = mask_exact(rgb, ndv)
-            return alpha
-
-    else:
-        alpha = mask_exact(rgb, [0, 0, 0])
-        return alpha
 
 
 def _alpha_worker(open_file, window, ij, g_args):
@@ -58,14 +25,29 @@ def _alpha_worker(open_file, window, ij, g_args):
           and a mask of shape (rows, cols) where
           opaque == 0 and transparent == max of dtype
     """
+    src = open_file[0]
 
-    rgb = open_file[0].read(window=window)
-    depth, rows, cols = rgb.shape
+    arr = src.read(window=window)
 
-    alpha = calc_alpha(rgb,
-                       g_args['ndv'])
+    # Determine Alpha Band
+    if g_args['ndv']:
+        # User-supplied nodata value
+        alpha = mask_exact(arr, g_args['ndv'])
+    else:
+        # Let rasterio decide
+        alpha = src.dataset_mask(window=window)
 
-    rgba = np.append(rgb, alpha[np.newaxis, :, :], axis=0)
+    # Replace or Add alpha band to input data
+    if arr.shape[0] == 4:
+        # replace alpha band with rasterio dataset_mask
+        # (likely the same but let's not make that assumption)
+        rgba = arr.copy()
+        rgba[3] = alpha
+    elif arr.shape[0] == 3:
+        # stack the dataset_mask to add alpha band
+        rgba = np.append(arr, alpha[np.newaxis, :, :], axis=0)
+    else:
+        raise ValueError("Array must have 3 or 4 bands (RGB or RGBA)")
 
     return rgba
 
@@ -92,8 +74,6 @@ def add_alpha(src_path, dst_path, ndv, creation_options,
 
     with rio.open(src_path) as src:
         dst_profile = src.profile.copy()
-        height = src.height
-        width = src.width
 
     dst_profile.update(**creation_options)
 

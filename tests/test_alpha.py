@@ -7,8 +7,7 @@ import pytest
 import numpy as np
 import rasterio as rio
 from rasterio.warp import reproject, Resampling
-from rio_alpha.alpha import (
-    add_alpha, calc_alpha)
+from rio_alpha.alpha import add_alpha
 from rio_alpha.alpha_mask import mask_exact
 
 
@@ -89,31 +88,3 @@ def test_add_alpha_no_photometric(test_var, capfd):
         with rio.open(expected_path) as expected:
             assert flex_compare(created.read(), expected.read())
             assert expected.profile.get('photometric') is None
-
-
-@given(arrays(np.uint8, (3, 8, 8),
-              elements=st.integers(0, np.iinfo(np.uint8).max)),
-       st.lists(elements=st.integers(min_value=0,
-                max_value=np.iinfo(np.uint8).max),
-                min_size=3,
-                max_size=3))
-def test_calc_alpha(arr, ndv):
-    ndv = [255, 255, 255]
-    assert np.array_equal(calc_alpha(arr, ndv), mask_exact(arr, ndv))
-
-
-@given(arrays(np.uint8, (3, 8, 8),
-              elements=st.integers(min_value=1, max_value=1)),
-       st.lists(elements=st.integers(min_value=1,
-                max_value=1),
-                min_size=3,
-                max_size=3))
-def test_calc_alpha2(arr, ndv):
-    assert np.array_equal(calc_alpha(arr, ndv), mask_exact(arr, 1))
-
-
-@given(arrays(np.uint8, (3, 8, 8),
-              elements=st.integers(min_value=1, max_value=1)))
-def test_calc_alpha_none_ndv(arr):
-    ndv = None
-    assert np.array_equal(calc_alpha(arr, ndv), mask_exact(arr, 0))

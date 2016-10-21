@@ -62,7 +62,7 @@ def findnodata(src_path, user_nodata, discovery, debug, verbose):
 @click.command('alpha')
 @click.argument('src_path', type=click.Path(exists=True))
 @click.argument('dst_path', type=click.Path(exists=False))
-@click.option('--ndv', default='[0, 0, 0]',
+@click.option('--ndv', default=None,
               help="Expects a string containing a single integer value "
               "(e.g. \'255\') or "
               "a string representation of a list containing "
@@ -72,6 +72,11 @@ def findnodata(src_path, user_nodata, discovery, debug, verbose):
 @creation_options
 def alpha(ctx, src_path, dst_path, ndv, creation_options,
           workers):
-    ndv = _parse_ndv(ndv, 3)
-    add_alpha(src_path, dst_path, ndv, creation_options,
-              workers)
+    """Adds/replaced an alpha band to your RGB or RGBA image
+
+    If you don't supply ndv, the alpha mask will be infered.
+    """
+    if ndv:
+        ndv = _parse_ndv(ndv, 3)
+
+    add_alpha(src_path, dst_path, ndv, creation_options, workers)
