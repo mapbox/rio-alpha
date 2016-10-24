@@ -17,8 +17,6 @@ def mask_exact(img, ndv):
         ndarray mask of shape (rows, cols) where
         opaque == 0 and transparent == max of dtype
     '''
-    depth, rows, cols = img.shape
-    alpha = np.any(np.rollaxis(img, 0, depth) != ndv, axis=2)
+    alpha = np.any(np.transpose(img, [1, 2, 0]) != ndv, axis=2)
     alpha_rescale = alpha.astype(img.dtype) * np.iinfo(img.dtype).max
-
     return alpha_rescale

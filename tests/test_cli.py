@@ -1,6 +1,7 @@
 import os
 
 import rasterio
+import numpy as np
 import click
 import pytest
 from click.testing import CliRunner
@@ -234,3 +235,37 @@ def test_cli_creation_opts(tmpdir):
 
     with rasterio.open(output, 'r') as src:
         assert src.compression == Compression.lzw
+
+
+def test_cli_rgba(tmpdir):
+    output = str(tmpdir.join('test_out.tif'))
+    runner = CliRunner()
+    result = runner.invoke(
+        alpha, ['tests/fixtures/landsat/LC80460272013104LGN01_l8sr.tif', output])
+    assert result.exit_code == 0
+
+
+def test_cli_equivalent_masks(tmpdir):
+    out1 = str(tmpdir.join('internal-to-rgba.tif'))
+    runner = CliRunner()
+    result = runner.invoke(
+        alpha, ['tests/fixtures/masks/internal_mask.tif', out1])
+    assert result.exit_code == 0
+
+    out2 = str(tmpdir.join('external-to-rgba.tif'))
+    runner = CliRunner()
+    result = runner.invoke(
+        alpha, ['tests/fixtures/masks/external_mask.tif', out2])
+    assert result.exit_code == 0
+
+    with rasterio.open(out1) as src1, rasterio.open(out2) as src2:
+        assert np.array_equal(src1.read(4), src2.read(4))
+
+
+def test_cli_must_be_3or4band(tmpdir):
+    output = str(tmpdir.join('test_out.tif'))
+    runner = CliRunner()
+    result = runner.invoke(
+        alpha, ['tests/fixtures/landsat/two_bands.tif', output])
+    assert result.exit_code != 0
+    assert "Array must have 3 or 4 bands (RGB or RGBA)" in result.output
