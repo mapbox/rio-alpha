@@ -245,6 +245,15 @@ def test_cli_rgba(tmpdir):
     assert result.exit_code == 0
 
 
+def test_cli_rgba_ndv(tmpdir):
+    output = str(tmpdir.join('test_out.tif'))
+    runner = CliRunner()
+    result = runner.invoke(
+        alpha, ['--ndv', '0',
+                'tests/fixtures/landsat/LC80460272013104LGN01_l8sr.tif', output])
+    assert result.exit_code == 0
+
+
 def test_cli_equivalent_masks(tmpdir):
     out1 = str(tmpdir.join('internal-to-rgba.tif'))
     runner = CliRunner()

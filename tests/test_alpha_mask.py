@@ -18,12 +18,13 @@ def test_mask_exact1(test_fixture):
     with rio.open(test_fixture) as src:
         img = src.read()
 
-    assert np.max(mask_exact(img, 255)) <= np.iinfo(img.dtype).max
-    assert mask_exact(img, 255).dtype == img.dtype
+    ndv = (255, 255, 255)
+    assert np.max(mask_exact(img, ndv)) <= np.iinfo(img.dtype).max
+    assert mask_exact(img, ndv).dtype == img.dtype
     assert np.array_equal(np.invert(np.all(
                         np.rollaxis(img, 0, 3) == 255,
                         axis=2)).astype(img.dtype) * np.iinfo(img.dtype).max,
-                        mask_exact(img, 255))
+                        mask_exact(img, ndv))
 
 
 @pytest.fixture

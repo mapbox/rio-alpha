@@ -76,7 +76,10 @@ def alpha(ctx, src_path, dst_path, ndv, creation_options,
 
     If you don't supply ndv, the alpha mask will be infered.
     """
+    with rio.open(src_path) as src:
+        band_count = src.count
+
     if ndv:
-        ndv = _parse_ndv(ndv, 3)
+        ndv = _parse_ndv(ndv, band_count)
 
     add_alpha(src_path, dst_path, ndv, creation_options, workers)
