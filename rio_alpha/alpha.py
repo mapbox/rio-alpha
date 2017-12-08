@@ -3,6 +3,18 @@ import rasterio as rio
 import riomucho
 from rio_alpha.alpha_mask import mask_exact
 
+# Convert window to an instance of rasterio.windows.Window
+# if possible, to avoid Rasterio deprecation warnings.
+#
+# The window_guard function is used like:
+#
+# window = window_guard(window)
+try:
+    from rasterio.windows import Window
+    window_guard = lambda x: x if isinstance(x, Window) else Window.from_slices(*x)
+except ImportError:
+    window_guard = lambda x: x
+
 
 def _alpha_worker(open_file, window, ij, g_args):
     """rio mucho worker for alpha. It reads input
@@ -11,7 +23,7 @@ def _alpha_worker(open_file, window, ij, g_args):
     Parameters
     ------------
     open_files: list of rasterio open files
-    window: tuples
+    window: tuples or 
             A window is a view onto a rectangular subset of a
             raster dataset and is described in rasterio
             by a pair of range tuples:
@@ -26,6 +38,10 @@ def _alpha_worker(open_file, window, ij, g_args):
           opaque == 0 and transparent == max of dtype
     """
     src = open_file[0]
+
+    # Guard against tuples that result in deprecation warnings
+    # with rasterio>=1.0a10.
+    window = window_guard(window)
 
     arr = src.read(window=window)
 
