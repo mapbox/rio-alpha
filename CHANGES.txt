@@ -1,0 +1,6 @@
+CHANGES
+
+Next
+----
+- Use rasterio's Window class when possible to avoid deprecation warnings
+  (#35).
