@@ -9,7 +9,9 @@ try:
     from rasterio.windows import Window
 except ImportError:
     class Window:
-        pass
+        def from_slices(self, window):
+            return window
+
 
 def window_guard(window):
     """Normalize window input to match rasterio version"""
