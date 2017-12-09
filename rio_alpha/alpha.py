@@ -8,17 +8,21 @@ from rio_alpha.alpha_mask import mask_exact
 try:
     from rasterio.windows import Window
 except ImportError:
-    class Window:
-        def from_slices(self, window):
-            return window
+    Window = None
 
 
 def window_guard(window):
     """Normalize window input to match rasterio version"""
-    if isinstance(window, Window):
-        return window
+    if Window is not None:
+        if isinstance(window, Window):
+            return window
+        else:
+            if hasattr(Window, 'from_slices'):
+                return Window.from_slices(*window)
+            else:
+                return Window.from_ranges(*window)
     else:
-        return Window.from_slices(*window)
+        return window
 
 
 def _alpha_worker(open_file, window, ij, g_args):

@@ -26,4 +26,4 @@ def test_window():
 def test_tuple_convert():
     windows_mod = pytest.importorskip("rasterio.windows")
     window = ((1, 2), (3, 4))
-    assert rio_alpha.alpha.window_guard(window) == windows_mod.Window.from_slices(*window)
+    assert rio_alpha.alpha.window_guard(window) == windows_mod.Window(3, 1, 1, 1)
