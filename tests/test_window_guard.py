@@ -12,8 +12,8 @@ class MockWindow:
 
 
 def test_import_window():
-    windows_mod = pytest.importorskip("rasterio.windows")
-    window = windows_mod.Window(0, 0, 10, 10)
+    window_cls = pytest.importorskip("rasterio.windows.Window")
+    window = window_cls(0, 0, 10, 10)
     assert rio_alpha.alpha.window_guard(window) == window
 
 
@@ -24,6 +24,6 @@ def test_window():
 
 
 def test_tuple_convert():
-    windows_mod = pytest.importorskip("rasterio.windows")
+    window_cls = pytest.importorskip("rasterio.windows.Window")
     window = ((1, 2), (3, 4))
-    assert rio_alpha.alpha.window_guard(window) == windows_mod.Window(3, 1, 1, 1)
+    assert rio_alpha.alpha.window_guard(window) == window_cls(3, 1, 1, 1)
