@@ -23,7 +23,7 @@ requirements = [
     'rasterio>=1.0a10',
     'rio-mucho>=0.2',
     'scikit-image>=0.13',
-    'scipy>=1'
+    'scipy>=0.18'
 ]
 
 if sys.version_info < (3, 3):
