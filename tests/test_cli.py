@@ -250,6 +250,8 @@ def test_cli_alpha_blocksize(tmpdir):
             "--ndv",
             "[0, 0, 0]",
             "--co",
+            "tiled=True",
+            "--co",
             "blockxsize=128",
             "--co",
             "blockysize=128",
@@ -261,7 +263,7 @@ def test_cli_alpha_blocksize(tmpdir):
         assert out.count == 4
         assert out.dtypes[-1] == rasterio.uint8
         assert out.dtypes[0] == rasterio.uint8
-        assert out.profile["tiled"] is False
+        assert out.profile["tiled"] is True
         assert int(out.profile["blockxsize"]) == 128
         assert int(out.profile["blockysize"]) == 128
 
