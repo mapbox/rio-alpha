@@ -4,8 +4,12 @@ import rasterio as rio
 from scipy.stats import mode
 
 from rio_alpha.utils import (
-    _convert_rgb, _compute_continuous,
-    _debug_mode, _search_image_edge, _evaluate_count)
+    _convert_rgb,
+    _compute_continuous,
+    _debug_mode,
+    _search_image_edge,
+    _evaluate_count,
+)
 
 
 def discover_ndv(rgb_orig, debug, verbose):
@@ -36,17 +40,15 @@ def discover_ndv(rgb_orig, debug, verbose):
 
     # If debug mode, print histograms & be verbose
     if debug:
-        click.echo('Original image ndv candidate: %s'
-                   % (str(candidate_original)))
-        click.echo('Filtered image ndv candidate: %s'
-                   % (str(candidate_continuous)))
+        click.echo("Original image ndv candidate: %s" % (str(candidate_original)))
+        click.echo("Filtered image ndv candidate: %s" % (str(candidate_continuous)))
         outplot = "/tmp/hist_plot.png"
         _debug_mode(rgb_mod_flat, arr, outplot)
 
     # Compare ndv candidates from full & squished image
-    candidate_list = [i for i, j in
-                      zip(candidate_original, candidate_continuous)
-                      if i == j]
+    candidate_list = [
+        i for i, j in zip(candidate_original, candidate_continuous) if i == j
+    ]
 
     # If candidates from original & filtered images match exactly,
     # print value & exit
@@ -57,31 +59,37 @@ def discover_ndv(rgb_orig, debug, verbose):
     # by searching image edge for frequency of each candidate
     elif len(candidate_list) < 3:
         if verbose:
-            click.echo("Competing ndv candidates...searching "
-                       "image collar for value frequency. "
-                       "Candidate list: %s" % str(candidate_list))
+            click.echo(
+                "Competing ndv candidates...searching "
+                "image collar for value frequency. "
+                "Candidate list: %s" % str(candidate_list)
+            )
 
-        count_img_edge_full, count_img_edge_continuous = \
-            _search_image_edge(rgb_mod,
-                               candidate_original,
-                               candidate_continuous)
+        count_img_edge_full, count_img_edge_continuous = _search_image_edge(
+            rgb_mod, candidate_original, candidate_continuous
+        )
 
         if verbose:
             for candidate in (candidate_original, candidate_continuous):
-                click.echo('Candidate value: %s '
-                           'Candidate count: %s '
-                           'Continuous count: %s'
-                           % (str(candidate), str(count_img_edge_full),
-                              str(count_img_edge_continuous)))
+                click.echo(
+                    "Candidate value: %s "
+                    "Candidate count: %s "
+                    "Continuous count: %s"
+                    % (
+                        str(candidate),
+                        str(count_img_edge_full),
+                        str(count_img_edge_continuous),
+                    )
+                )
 
-        output = _evaluate_count(count_img_edge_full,
-                                 count_img_edge_continuous,
-                                 verbose)
+        output = _evaluate_count(
+            count_img_edge_full, count_img_edge_continuous, verbose
+        )
 
         return output
 
     else:
-        return 'Invalid %s ' % (str(candidate_list))
+        return "Invalid %s " % (str(candidate_list))
 
 
 def determine_nodata(src_path, user_nodata, discovery, debug, verbose):
@@ -127,8 +135,8 @@ def determine_nodata(src_path, user_nodata, discovery, debug, verbose):
                 if len(candidates) != 3:
                     return ""
                 else:
-                    return '[{}, {}, {}]'.format(*candidates)
+                    return "[{}, {}, {}]".format(*candidates)
             else:
                 return ""
         else:
-            return '%s' % (str(int(nodata)))
+            return "%s" % (str(int(nodata)))

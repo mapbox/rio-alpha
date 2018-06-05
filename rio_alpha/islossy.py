@@ -5,7 +5,7 @@ from rio_alpha.alpha_mask import mask_exact
 
 
 def count_ndv_regions(img, ndv):
-    '''Discover unique labels to count ndv regions.
+    """Discover unique labels to count ndv regions.
 
     Parameters
     ----------
@@ -18,16 +18,11 @@ def count_ndv_regions(img, ndv):
     -------
     n_labels: int
         an integer equal to the number of connected regions
-    '''
+    """
     np.set_printoptions(threshold=np.nan)
 
     img = mask_exact(img, ndv)
 
-    _, n_labels = measure.label(
-        img,
-        background=255,
-        neighbors=4,
-        return_num=True
-    )
+    _, n_labels = measure.label(img, background=255, neighbors=4, return_num=True)
 
     return n_labels

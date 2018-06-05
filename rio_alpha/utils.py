@@ -22,7 +22,7 @@ def _parse_single(n):
     try:
         return float(n)
     except ValueError:
-        raise ValueError('{0} is not a valid nodata value'.format(n))
+        raise ValueError("{0} is not a valid nodata value".format(n))
 
 
 def _parse_ndv(ndv, bands):
@@ -39,13 +39,13 @@ def _parse_ndv(ndv, bands):
 
     """
 
-    if re.match(r'\[[0-9\.\,\s]+\]', ndv):
+    if re.match(r"\[[0-9\.\,\s]+\]", ndv):
         ndvals = [_parse_single(n) for n in json.loads(ndv)]
         if len(ndvals) != bands:
-            raise ValueError('{0} parsed to ndv of {1} does '
-                             'not match band count of {2}'.format(
-                              ndv, json.dumps(ndvals), bands
-                             ))
+            raise ValueError(
+                "{0} parsed to ndv of {1} does "
+                "not match band count of {2}".format(ndv, json.dumps(ndvals), bands)
+            )
         else:
             return ndvals
     else:
@@ -67,8 +67,8 @@ def _convert_rgb(rgb_orig):
     rgb_mod = rgb_orig[::mod, ::mod]
     # Flatten image for full img histogram
     rgb_mod_flat = rgb_mod.reshape(
-                        (rgb_mod.shape[0]*rgb_mod.shape[1],
-                         rgb_mod.shape[-1]))
+        (rgb_mod.shape[0] * rgb_mod.shape[1], rgb_mod.shape[-1])
+    )
 
     return rgb_mod, rgb_mod_flat
 
@@ -92,9 +92,7 @@ def _group(lst, n, continuous):
 
 def _compute_continuous(rgb_mod, loc):
     cont_lst = []
-    return _group(_find_continuous_rgb(rgb_mod, loc),
-                  3,
-                  cont_lst)
+    return _group(_find_continuous_rgb(rgb_mod, loc), 3, cont_lst)
 
 
 def _search_image_edge(rgb_mod, candidate_original, candidate_continuous):
@@ -103,22 +101,21 @@ def _search_image_edge(rgb_mod, candidate_original, candidate_continuous):
     bottom_row = rgb_mod[-1, :, :]
     first_col = rgb_mod[:, 0, :]
     last_col = rgb_mod[:, -1, :]
-    img_edge = np.concatenate(
-                    (top_row, last_col, bottom_row, first_col),
-                    axis=0
-                )
+    img_edge = np.concatenate((top_row, last_col, bottom_row, first_col), axis=0)
 
     # Squish image edge down to just continuous values
     edge_mode_continuous, arr = _compute_continuous(rgb_mod, 0)
 
     # Count nodata value frequency in full image edge & squished image edge
-    count_img_edge_full = \
-        [len(np.transpose(np.where((img_edge == candidate).all(axis=1))))
-            for candidate in (candidate_original, candidate_continuous)]
+    count_img_edge_full = [
+        len(np.transpose(np.where((img_edge == candidate).all(axis=1))))
+        for candidate in (candidate_original, candidate_continuous)
+    ]
 
-    count_img_edge_continuous = \
-        [len(np.transpose(np.where((arr == candidate).all(axis=1))))
-            for candidate in (candidate_original, candidate_continuous)]
+    count_img_edge_continuous = [
+        len(np.transpose(np.where((arr == candidate).all(axis=1))))
+        for candidate in (candidate_original, candidate_continuous)
+    ]
 
     return count_img_edge_full, count_img_edge_continuous
 
@@ -126,12 +123,10 @@ def _search_image_edge(rgb_mod, candidate_original, candidate_continuous):
 def _evaluate_count(lst1, lst2, verbose):
     # Q: will these always realiably be ordered as listed
     # above with original first, continuous second?
-    if (lst1[0] > lst1[1]) and \
-       (lst2[0] > lst2[1]):
+    if (lst1[0] > lst1[1]) and (lst2[0] > lst2[1]):
         return lst1
 
-    elif (lst1[0] < lst1[1]) and \
-         (lst2[0] < lst2[1]):
+    elif (lst1[0] < lst1[1]) and (lst2[0] < lst2[1]):
         return lst2
 
     else:
@@ -143,8 +138,9 @@ def _evaluate_count(lst1, lst2, verbose):
 
 def _debug_mode(rgb_flat, arr, output):
     import matplotlib.pyplot as plt
+
     plt.hist(rgb_flat, bins=range(256))
     # histogram of continuous values only
     plt.hist(arr, bins=range(256))
-    plt.savefig(output, bbox_inches='tight')
+    plt.savefig(output, bbox_inches="tight")
     plt.close()

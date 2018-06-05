@@ -20,7 +20,7 @@ def test_import_window():
     assert rio_alpha.alpha.window_guard(window) == window
 
 
-@patch('rio_alpha.alpha.Window', MockWindow)
+@patch("rio_alpha.alpha.Window", MockWindow)
 def test_window():
     window = MockWindow()
     assert rio_alpha.alpha.window_guard(window) == window
