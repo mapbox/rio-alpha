@@ -7,6 +7,7 @@ env:
   global:
     - PIP_WHEEL_DIR=$HOME/.cache/pip/wheels
     - PIP_FIND_LINKS=file://$HOME/.cache/pip/wheels
+    - RIO_IGNORE_CREATION_KWDS=TRUE
 addons:
   apt:
     packages:

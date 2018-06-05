@@ -17,7 +17,7 @@ def window_guard(window):
         if isinstance(window, Window):
             return window
         else:
-            if hasattr(Window, 'from_slices'):
+            if hasattr(Window, "from_slices"):
                 return Window.from_slices(*window)
             else:
                 return Window.from_ranges(*window)
@@ -55,9 +55,9 @@ def _alpha_worker(open_file, window, ij, g_args):
     arr = src.read(window=window)
 
     # Determine Alpha Band
-    if g_args['ndv']:
+    if g_args["ndv"]:
         # User-supplied nodata value
-        alpha = mask_exact(arr, g_args['ndv'])
+        alpha = mask_exact(arr, g_args["ndv"])
     else:
         # Let rasterio decide
         alpha = src.dataset_mask(window=window)
@@ -77,8 +77,7 @@ def _alpha_worker(open_file, window, ij, g_args):
     return rgba
 
 
-def add_alpha(src_path, dst_path, ndv, creation_options,
-              processes):
+def add_alpha(src_path, dst_path, ndv, creation_options, processes):
     """
     Parameters
     ------------
@@ -102,22 +101,19 @@ def add_alpha(src_path, dst_path, ndv, creation_options,
 
     dst_profile.update(**creation_options)
 
-    dst_profile.pop('photometric', None)
+    dst_profile.pop("photometric", None)
 
-    dst_profile.update(
-        count=4,
-        nodata=None)
+    dst_profile.update(count=4, nodata=None)
 
-    global_args = {
-        'src_nodata': 0,
-        'dst_dtype': dst_profile['dtype'],
-        'ndv': ndv}
+    global_args = {"src_nodata": 0, "dst_dtype": dst_profile["dtype"], "ndv": ndv}
 
-    with riomucho.RioMucho([src_path],
-                           dst_path,
-                           _alpha_worker,
-                           options=dst_profile,
-                           global_args=global_args,
-                           mode='manual_read') as rm:
+    with riomucho.RioMucho(
+        [src_path],
+        dst_path,
+        _alpha_worker,
+        options=dst_profile,
+        global_args=global_args,
+        mode="manual_read",
+    ) as rm:
 
         rm.run(processes)

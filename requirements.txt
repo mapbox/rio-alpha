@@ -14,7 +14,7 @@ pyparsing==2.2.0
 python-dateutil==2.7.0
 pytz==2018.3
 PyWavelets==0.5.2
-rasterio==1.0a12
+rasterio==1.0b1
 rio-mucho==0.2.2
 scikit-image==0.13.1
 scipy==1.0.0
