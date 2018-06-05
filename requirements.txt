@@ -1,5 +1,5 @@
 click
-rasterio>=0.36
+rasterio>=1.0b1
 numpy
 rio-mucho>=0.2.1
 scikit-image
