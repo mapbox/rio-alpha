@@ -1,6 +1,9 @@
 import os
+import sys
+
 from setuptools import setup, find_packages
 from setuptools.extension import Extension
+
 
 with open('rio_alpha/__init__.py') as f:
     for line in f:
@@ -12,12 +15,19 @@ with open('rio_alpha/__init__.py') as f:
 
 long_description = """Rasterio plugin for handling nodata values
 
-See https://github.com/mapbox/rio-alpha for docs."""
+See https://github.com/mapbox/rio-alpha for docs.
+"""
 
+requirements = [
+    'click>=6',
+    'rasterio>=1.0b1',
+    'rio-mucho>=0.2',
+    'scikit-image>=0.13',
+    'scipy>=0.18'
+]
 
-def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
-
+if sys.version_info < (3, 3):
+    requirements += ['mock>=2']
 
 setup(
     name='rio-alpha',
@@ -33,7 +43,7 @@ setup(
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
     include_package_date=True,
     zip_safe=False,
-    install_requires=read('requirements.txt').splitlines(),
+    install_requires=requirements,
     extras_require={
         'plot': ['matplotlib'],
         'test': ['codecov', 'hypothesis', 'pytest', 'pytest-cov']},

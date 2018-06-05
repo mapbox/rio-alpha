@@ -1,0 +1,14 @@
+CHANGES
+=======
+
+0.6.1 (2018-03-21)
+------------------
+
+- Require scipy>=0.18
+
+0.6.0 (2018-03-21)
+------------------
+
+- Require rasterio>=1.0a10
+- Use rasterio's Window class when possible to avoid deprecation warnings
+  (#35).
