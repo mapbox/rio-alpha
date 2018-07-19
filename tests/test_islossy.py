@@ -1,24 +1,24 @@
-import pytest
-import rasterio as rio
-
+import rasterio
 import hypothesis.strategies as st
-from hypothesis import given, example
+from hypothesis import given
 from hypothesis.extra.numpy import arrays
 import numpy as np
-import pytest
-
 from rio_alpha.islossy import count_ndv_regions
 
 
 def test_count_ndv_regions_should_return_0():
-    with rio.open("tests/fixtures/ca_chilliwack/" "2012_30cm_594_5450.tiny.tif") as src:
+    with rasterio.open(
+        "tests/fixtures/ca_chilliwack/" "2012_30cm_594_5450.tiny.tif"
+    ) as src:
         img = src.read()
         ndv = (0, 0, 0)
         assert count_ndv_regions(img, ndv) == 0
 
 
 def test_count_ndv_regions_should_return_results():
-    with rio.open("tests/fixtures/ca_chilliwack/" "2012_30cm_594_5450.tiny.tif") as src:
+    with rasterio.open(
+        "tests/fixtures/ca_chilliwack/" "2012_30cm_594_5450.tiny.tif"
+    ) as src:
         img = src.read()
         ndv = (255, 255, 255)
         assert count_ndv_regions(img, ndv) == 14666

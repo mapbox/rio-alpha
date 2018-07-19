@@ -1,3 +1,5 @@
+"""Evaluate datasets for lossy compression affected nodata masks"""
+
 import numpy as np
 from skimage import measure
 
@@ -23,6 +25,6 @@ def count_ndv_regions(img, ndv):
 
     img = mask_exact(img, ndv)
 
-    _, n_labels = measure.label(img, background=255, neighbors=4, return_num=True)
+    _, n_labels = measure.label(img, background=255, connectivity=1, return_num=True)
 
     return n_labels

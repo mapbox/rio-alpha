@@ -1,6 +1,7 @@
+"""rio_alpha package."""
+
 import logging
 
-__version__ = "0.6.1"
+__version__ = "1.0rc1"
 
 log = logging.getLogger(__name__)
-log.addHandler(logging.NullHandler())

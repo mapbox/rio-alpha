@@ -1,14 +1,10 @@
 from affine import Affine
-import hypothesis.strategies as st
-from hypothesis import given, example
-from hypothesis.extra.numpy import arrays
 import click
 import pytest
 import numpy as np
 import rasterio as rio
 from rasterio.warp import reproject, Resampling
 from rio_alpha.alpha import add_alpha
-from rio_alpha.alpha_mask import mask_exact
 
 
 def affaux(up):

@@ -2,8 +2,6 @@ import os
 
 import rasterio
 import numpy as np
-import click
-import pytest
 from click.testing import CliRunner
 import warnings
 from rasterio.enums import Compression
@@ -325,4 +323,4 @@ def test_cli_must_be_3or4band(tmpdir):
     runner = CliRunner()
     result = runner.invoke(alpha, ["tests/fixtures/landsat/two_bands.tif", output])
     assert result.exit_code != 0
-    assert "Array must have 3 or 4 bands (RGB or RGBA)" in result.output
+    assert "Array must have 3 or 4 bands (RGB or RGBA)" in str(result.exception)

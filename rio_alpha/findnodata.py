@@ -1,6 +1,8 @@
+"""Find nodata value of datasets."""
+
 import click
 import numpy as np
-import rasterio as rio
+import rasterio
 from scipy.stats import mode
 
 from rio_alpha.utils import (
@@ -89,7 +91,7 @@ def discover_ndv(rgb_orig, debug, verbose):
         return output
 
     else:
-        return "Invalid %s " % (str(candidate_list))
+        raise ValueError("Invalid candidate list {!r}".format(candidate_list))
 
 
 def determine_nodata(src_path, user_nodata, discovery, debug, verbose):
@@ -118,7 +120,7 @@ def determine_nodata(src_path, user_nodata, discovery, debug, verbose):
                   For example, string([int(ndv), int(ndv), int(ndv)])
     """
 
-    with rio.open(src_path, "r") as src:
+    with rasterio.open(src_path, "r") as src:
         count = src.count
         data = np.rollaxis(src.read(), 0, 3)
 

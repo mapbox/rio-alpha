@@ -1,6 +1,6 @@
 import rasterio as rio
 import hypothesis.strategies as st
-from hypothesis import given, example
+from hypothesis import given
 from hypothesis.extra.numpy import arrays
 import numpy as np
 import pytest

@@ -1,42 +1,21 @@
+"""Alpha masking worker and concurrent processor."""
+
 import numpy as np
-import rasterio as rio
+import rasterio
 import riomucho
 from rio_alpha.alpha_mask import mask_exact
 
-# Convert window to an instance of rasterio.windows.Window, if possible,
-# to avoid Rasterio deprecation warnings.
-try:
-    from rasterio.windows import Window
-except ImportError:
-    Window = None
 
-
-def window_guard(window):
-    """Normalize window input to match rasterio version"""
-    if Window is not None:
-        if isinstance(window, Window):
-            return window
-        else:
-            if hasattr(Window, "from_slices"):
-                return Window.from_slices(*window)
-            else:
-                return Window.from_ranges(*window)
-    else:
-        return window
-
-
-def _alpha_worker(open_file, window, ij, g_args):
+def alpha_worker(open_file, window, ij, g_args):
     """rio mucho worker for alpha. It reads input
     files and perform alpha calculations on each window.
 
     Parameters
     ------------
     open_files: list of rasterio open files
-    window: tuples or Window object
+    window: Window object
             A window is a view onto a rectangular subset of a
-            raster dataset and is described in rasterio
-            by a pair of range tuples:
-            ((row_start, row_stop), (col_start, col_stop))
+            raster dataset.
     g_args: dictionary
 
     Returns
@@ -47,10 +26,6 @@ def _alpha_worker(open_file, window, ij, g_args):
           opaque == 0 and transparent == max of dtype
     """
     src = open_file[0]
-
-    # Guard against tuples that result in deprecation warnings
-    # with rasterio>=1.0a10.
-    window = window_guard(window)
 
     arr = src.read(window=window)
 
@@ -77,6 +52,9 @@ def _alpha_worker(open_file, window, ij, g_args):
     return rgba
 
 
+_alpha_worker = alpha_worker
+
+
 def add_alpha(src_path, dst_path, ndv, creation_options, processes):
     """
     Parameters
@@ -96,8 +74,8 @@ def add_alpha(src_path, dst_path, ndv, creation_options, processes):
         Output is written to dst_path
     """
 
-    with rio.open(src_path) as src:
-        dst_profile = src.profile.copy()
+    with rasterio.open(src_path) as src:
+        dst_profile = src.profile
 
     dst_profile.update(**creation_options)
 

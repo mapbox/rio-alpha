@@ -1,6 +1,17 @@
 CHANGES
 =======
 
+1.0rc1 (2018-07-19)
+-------------------
+
+- Requires Rasterio>=1.0.0 and rio-mucho>=1.0rc1.
+- Added missing docstrings to modules (#39).
+- Made alpha_worker function public, leaving _alpha_worker as an alias (#40).
+- Removed code protecting this module against deprecations in Rasterio
+  pre-releases.
+- Calls skimage.measure.label() with `connectivity=1` instead of `neighbors=4`
+  (#8).
+
 0.6.1 (2018-03-21)
 ------------------
 
