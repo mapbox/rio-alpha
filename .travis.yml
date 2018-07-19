@@ -1,39 +1,40 @@
 language: python
+
 sudo: false
+
 cache:
   directories:
     - ~/.cache/pip
+
 env:
   global:
     - PIP_WHEEL_DIR=$HOME/.cache/pip/wheels
     - PIP_FIND_LINKS=file://$HOME/.cache/pip/wheels
-    - RIO_IGNORE_CREATION_KWDS=TRUE
-addons:
-  apt:
-    packages:
-    - libgdal1h
-    - gdal-bin
-    - libgdal-dev
-    - libatlas-dev
-    - libatlas-base-dev
-    - gfortran
+
 python:
   - "2.7"
   - "3.6"
+
 before_script: # configure a headless display to test plot generation
-- "export DISPLAY=:99.0"
-- "sh -e /etc/init.d/xvfb start"
-- sleep 6 # give xvfb some time to start
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 6 # give xvfb some time to start
+
 before_install:
   - "pip install -U pip"
-  - "pip install wheel"
-install:
   - "pip install -r requirements-dev.txt"
+  - "pip install pre-commit"
+
+install:
   - "pip install -e .[plot,test]"
+
 script:
-  - python -m pytest --cov rio_alpha --cov-report term-missing --ignore=venv
+  - if [[ $TRAVIS_PYTHON_VERSION == 3.6 ]]; then pre-commit run --all-files; fi
+  - python -m pytest --cov rio_alpha --cov-report term-missing
+
 after_success:
   - coveralls
+
 deploy:
   on:
     tags: true
