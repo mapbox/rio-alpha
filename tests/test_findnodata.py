@@ -1,20 +1,12 @@
 import rasterio as rio
 import hypothesis.strategies as st
-from hypothesis import given, example
+from hypothesis import given
 from hypothesis.extra.numpy import arrays
 import numpy as np
 import pytest
-from scipy.stats import mode
 from rio_alpha.findnodata import discover_ndv, determine_nodata
 
-from rio_alpha.utils import (
-    _convert_rgb,
-    _find_continuous_rgb,
-    _group,
-    _compute_continuous,
-    _search_image_edge,
-    _evaluate_count,
-)
+from rio_alpha.utils import _convert_rgb, _compute_continuous
 
 
 @pytest.fixture
@@ -66,12 +58,7 @@ arr_str2 = arrays(np.uint8, (8, 8, 3), elements=st.integers(min_value=1, max_val
 @given(arr_str2)
 def test_discover_ndv_list_three(arr_str2):
     candidates = discover_ndv(arr_str2, debug=False, verbose=True)
-    mode_vals = mode(_convert_rgb(arr_str2)[1])
-    candidate_original = [int((mode_vals[0])[0, i]) for i in range(3)]
     candidate_continuous, arr = _compute_continuous(_convert_rgb(arr_str2)[0], 1)
-    candidate_list = [
-        i for i, j in zip(candidate_original, candidate_continuous) if i == j
-    ]
     assert candidates == [1, 1, 1]
 
 
@@ -106,12 +93,7 @@ def test_discover_ndv_list_less_three(arr_str2):
     arr_str2[0] = cons_arr
     arr_str2[1:] = cons_arr2
     candidates = discover_ndv(arr_str2, debug=False, verbose=True)
-    mode_vals = mode(_convert_rgb(arr_str2)[1])
-    candidate_original = [int((mode_vals[0])[0, i]) for i in range(3)]
     candidate_continuous, arr = _compute_continuous(_convert_rgb(arr_str2)[0], 1)
-    candidate_list = [
-        i for i, j in zip(candidate_original, candidate_continuous) if i == j
-    ]
     assert candidates == "None"
 
 
@@ -146,10 +128,5 @@ def test_discover_ndv_list_less_three2(arr_str2):
     arr_str2[0] = cons_arr
     arr_str2[1:] = cons_arr2
     candidates = discover_ndv(arr_str2, debug=False, verbose=False)
-    mode_vals = mode(_convert_rgb(arr_str2)[1])
-    candidate_original = [int((mode_vals[0])[0, i]) for i in range(3)]
     candidate_continuous, arr = _compute_continuous(_convert_rgb(arr_str2)[0], 1)
-    candidate_list = [
-        i for i, j in zip(candidate_original, candidate_continuous) if i == j
-    ]
     assert candidates == ""

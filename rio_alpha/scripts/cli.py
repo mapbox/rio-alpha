@@ -1,3 +1,5 @@
+"""rio-alpha command."""
+
 import logging
 import click
 
@@ -70,6 +72,7 @@ def islossy(input, ndv):
     help="Prints extra information, " "like competing candidate values",
 )
 def findnodata(src_path, user_nodata, discovery, debug, verbose):
+    """Print a dataset's nodata value."""
     ndv = determine_nodata(src_path, user_nodata, discovery, debug, verbose)
     click.echo("%s" % ndv)
 

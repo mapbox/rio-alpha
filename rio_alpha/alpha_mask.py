@@ -1,3 +1,5 @@
+"""Alpha masking."""
+
 import numpy as np
 
 
