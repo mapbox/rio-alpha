@@ -18,12 +18,7 @@ long_description = """Rasterio plugin for handling nodata values
 See https://github.com/mapbox/rio-alpha for docs.
 """
 
-requirements = [
-    "click>=6",
-    "rasterio~=1.0",
-    "rio-mucho>=1.0rc1",
-    "scipy>=0.18",
-]
+requirements = ["click>=6", "rasterio~=1.0", "rio-mucho>=1.0rc1", "scipy>=0.18"]
 
 if sys.version_info < (3, 3):
     requirements += ["mock>=2"]

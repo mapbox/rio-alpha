@@ -1,6 +1,5 @@
 """Evaluate datasets for lossy compression affected nodata masks"""
 
-import numpy as np
 from rasterio.features import shapes
 
 from rio_alpha.alpha_mask import mask_exact
