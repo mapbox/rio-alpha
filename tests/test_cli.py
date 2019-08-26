@@ -12,7 +12,7 @@ from rio_alpha.scripts.cli import alpha, islossy, findnodata
 def test_cli_missing_input():
     result = CliRunner().invoke(islossy, ["tests/fixtures/dne.tif"])
     assert result.exit_code == 2
-    assert 'Invalid value for "input"' in result.output
+    assert 'Invalid value for "INPUT"' in result.output
 
 
 def test_cli_lossy_single_value_ndv():

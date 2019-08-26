@@ -1,6 +1,13 @@
 CHANGES
 =======
 
+1.0.1 (2019-08-26)
+------------------
+
+- Remove `numpy.set_printoptions()` call in `count_ndv_regions()`, the usage
+  was no longer correct in newer versions of Numpy.
+- Remove dependency on scikit-image by using `rasterio.features.shapes()`.
+
 1.0.0 (2018-07-26)
 ------------------
 

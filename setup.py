@@ -20,9 +20,8 @@ See https://github.com/mapbox/rio-alpha for docs.
 
 requirements = [
     "click>=6",
-    "rasterio>=1.0b1",
+    "rasterio~=1.0",
     "rio-mucho>=1.0rc1",
-    "scikit-image>=0.13",
     "scipy>=0.18",
 ]
 
