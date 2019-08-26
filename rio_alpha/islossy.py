@@ -1,7 +1,6 @@
 """Evaluate datasets for lossy compression affected nodata masks"""
 
-import numpy as np
-from skimage import measure
+from rasterio.features import shapes
 
 from rio_alpha.alpha_mask import mask_exact
 
@@ -18,13 +17,8 @@ def count_ndv_regions(img, ndv):
 
     Returns
     -------
-    n_labels: int
-        an integer equal to the number of connected regions
+    int
+        The number of connected regions
     """
-    np.set_printoptions(threshold=np.nan)
-
     img = mask_exact(img, ndv)
-
-    _, n_labels = measure.label(img, background=255, connectivity=1, return_num=True)
-
-    return n_labels
+    return len(list(shapes(img, mask=(img != 255))))
