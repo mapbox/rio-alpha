@@ -2,8 +2,8 @@
 rio-alpha
 =========
 
-[![Build Status](https://travis-ci.org/mapbox/rio-alpha.svg?branch=master)](https://travis-ci.org/mapbox/rio-alpha)
-[![Coverage Status](https://coveralls.io/repos/github/mapbox/rio-alpha/badge.svg?branch=master)](https://coveralls.io/github/mapbox/rio-alpha?branch=master)
+[![Build Status](https://travis-ci.com/mapbox/rio-alpha.svg?branch=main)](https://travis-ci.com/mapbox/rio-alpha)
+[![Coverage Status](https://coveralls.io/repos/github/mapbox/rio-alpha/badge.svg?branch=main)](https://coveralls.io/github/mapbox/rio-alpha?branch=main)
 
 
 A [rasterio](https://github.com/mapbox/rasterio) plugin for working with nodata. Provides a cli and python modules.
