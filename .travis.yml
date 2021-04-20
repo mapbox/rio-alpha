@@ -10,8 +10,10 @@ env:
     - PIP_FIND_LINKS=file://$HOME/.cache/pip/wheels
 
 python:
-  - "2.7"
   - "3.6"
+  - "3.7"
+  - "3.8"
+  - "3.9"
 
 services:
   - xvfb
