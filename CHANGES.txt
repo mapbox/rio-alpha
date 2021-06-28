@@ -1,6 +1,12 @@
 CHANGES
 =======
 
+1.0.2 (2021-06-28)
+------------------
+
+- Read source in `determine_nodata()` only if discovery of nodata is needed.
+- Open source in `determine_nodata()` only if `user_nodata` is unspecified.
+
 1.0.1 (2019-08-26)
 ------------------
 
