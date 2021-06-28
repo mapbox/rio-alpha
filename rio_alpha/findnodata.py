@@ -122,7 +122,6 @@ def determine_nodata(src_path, user_nodata, discovery, debug, verbose):
 
     with rasterio.open(src_path, "r") as src:
         count = src.count
-        data = np.rollaxis(src.read(), 0, 3)
 
     if user_nodata:
         return user_nodata
@@ -133,6 +132,7 @@ def determine_nodata(src_path, user_nodata, discovery, debug, verbose):
         nodata = src.nodata
         if nodata is None:
             if discovery:
+                data = np.rollaxis(src.read(), 0, 3)
                 candidates = discover_ndv(data, debug, verbose)
                 if len(candidates) != 3:
                     return ""
