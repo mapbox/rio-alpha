@@ -120,25 +120,25 @@ def determine_nodata(src_path, user_nodata, discovery, debug, verbose):
                   For example, string([int(ndv), int(ndv), int(ndv)])
     """
 
-    with rasterio.open(src_path, "r") as src:
-        count = src.count
-        data = np.rollaxis(src.read(), 0, 3)
-
     if user_nodata:
         return user_nodata
 
-    if count == 4:
-        return "alpha"
-    else:
-        nodata = src.nodata
-        if nodata is None:
-            if discovery:
-                candidates = discover_ndv(data, debug, verbose)
-                if len(candidates) != 3:
-                    return ""
-                else:
-                    return "[{}, {}, {}]".format(*candidates)
-            else:
-                return ""
+    with rasterio.open(src_path, "r") as src:
+        count = src.count
+
+        if count == 4:
+            return "alpha"
         else:
-            return "%s" % (str(int(nodata)))
+            nodata = src.nodata
+            if nodata is None:
+                if discovery:
+                    data = np.rollaxis(src.read(), 0, 3)
+                    candidates = discover_ndv(data, debug, verbose)
+                    if len(candidates) != 3:
+                        return ""
+                    else:
+                        return "[{}, {}, {}]".format(*candidates)
+                else:
+                    return ""
+            else:
+                return "%s" % (str(int(nodata)))
