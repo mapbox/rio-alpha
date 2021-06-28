@@ -120,11 +120,11 @@ def determine_nodata(src_path, user_nodata, discovery, debug, verbose):
                   For example, string([int(ndv), int(ndv), int(ndv)])
     """
 
+    if user_nodata:
+        return user_nodata
+
     with rasterio.open(src_path, "r") as src:
         count = src.count
-
-        if user_nodata:
-            return user_nodata
 
         if count == 4:
             return "alpha"
